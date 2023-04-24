@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title>signed in</title>
+    <style>
+      /* Center the page content */
+      html, body {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f8f8;
+      }
+
+      /* Style for the form container */
+      form {
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        text-align: center;
+      }
+
+      /* Style for the form heading */
+      h1 {
+        font-size: 28px;
+        color: #333333;
+      }
+
+      /* Style for the form submit button */
+      input[type="submit"] {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+      }
+
+      /* Hover effect for the form submit button */
+      input[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="{{ url_for('login') }}" method="POST">
+      <h1>You have successfully signed in</h1>
+      <h3>Click here to login</h3>
+      <input type="submit" value="Login">
+    </form>
+  </body>
+</html>

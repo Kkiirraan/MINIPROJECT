@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List of Rooms</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #e2e2e2;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    {% include 'nav2.html' %}
+    <h1>List of Rooms</h1>
+    <table>
+        <tr>
+            <th>Date of exam</th>
+            <th>time of exam</th>
+            
+            <th>dept</th>
+            <th>room</th>
+            <th>Number of Students per Bench</th>
+            <th>Number of rows</th>
+            <th>Capacity of the room</th>
+            <th>Allot student</th>
+            <th>Delete room</th>
+        </tr>
+        {% for room in rooms %}
+        <tr>
+            <td>{{ room[0] }}</td>
+            <td>{{ room[1] }}
+            {{ room[2] }}</td>
+            <td>{{ room[3] }}</td>
+            <td>{{ room[4]}}</td>
+            <td>{{ room[5]}}</td>
+            <td>{{ room[6]}}</td>
+            <td>{{ room[7]}}</td>
+            <td><a href="{{ url_for('allot', dept=room[3], e_date=room[0], mer=room[2], room_no=room[4]) }}" class="btn btn-primary" id="allot-link">allot</a></td>
+            <td><a href="{{ url_for('deleteroom', dept=room[3], e_date=room[0], mer=room[2], room_no=room[4]) }}" class="btn btn-primary">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <script>
+        
+    </script>
+</body>
+</html>

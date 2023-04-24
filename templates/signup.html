@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sign up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label, input {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            width: auto;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .warning {
+            color: red;
+            margin-top: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    {% include 'nav1.html' %}
+    <center><h2>Sign up here</h2></center>
+    <form method="POST" action="/signup" id="signupform">
+        <div style="display:flex; justify-content:center;">
+            <label for="username">Name:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        
+        <br>  
+        <div style="display:flex; justify-content:center;">
+                <label for="id">ID:</label>
+                    <input type="text" id="id" name="id" required>
+        </div>
+        
+        <br> 
+        <div style="display:flex; justify-content:center;">
+            <label for="dob">DOB:</label>
+                <input type="text" id="dob" name="dob" required placeholder="DD-MM-YYYY" onblur="validateDate()">
+        </div>
+        
+        <div id="incorrectdate" class="warning">{{incorrectdate}}</div>
+        <br> 
+        <div style="display:flex; justify-content:center;">
+            <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone" required>
+        </div>
+             <br> 
+             <div style="display:flex; justify-content:center;">
+            
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required>
+            
+        </div>
+        <br>
+        <div style="display:flex; justify-content:center;">
+            
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            
+        </div>
+        <br>
+        <div style="display:flex; justify-content:center;">
+            
+                <label for="confirm_password">Confirm password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+                
+        </div>
+        <div id="passwordMatchWarning" class="warning">{{doesnotmatch}}</div>
+        
+        <br><br>
+        <h3>Security questions?</h3>
+        <label for="fcolor">What is your favourite color?</label>
+        <input type="text" id="fcolor" name="fcolor" required>
+        <label for="bgroup">What is your blood group?</label>
+        <input type="text" id="bgroup" name="bgroup" required>
+        <label for="siblings">Do you have siblings?</label>
+        <input type="text" id="siblings" name="siblings" required placeholder="type yes or no">
+        <label for="cinema">Do you like cinema?</label>
+        <input type="text" id="cinema" name="cinema" required placeholder="type yes or no">
+        <div id="accountalready" class="warning">{{accountalready}}</div>
+        <div id="incorrectid" class="warning">{{incorrectid}}</div>
+        <div>
+            <center>
+                <input type="submit" value="sign up">
+            </center>
+        </div>
+    </form>
+    <script>
+        var passwordField = document.getElementById('password');
+        var confirmPasswordField = document.getElementById('confirm_password');
+        var passwordMatchWarning = document.getElementById('passwordMatchWarning');
+
+        confirmPasswordField.addEventListener('input', function() {
+            if (passwordField.value !== confirmPasswordField.value) {
+                passwordMatchWarning.textContent = "Passwords do not match";
+            } else {
+                passwordMatchWarning.textContent = "";
+            }
+        });
+        passwordField.addEventListener('input', function() {
+            if (passwordField.value === confirmPasswordField.value) {
+                passwordMatchWarning.textContent = "";
+            }
+        });
+        function validateDate() {
+            event.preventDefault();
+            var dateInput = document.getElementById("dob").value;
+            var dateRegex = /^(\d{2})-(\d{2})-(\d{4})$/; 
+            var match = dateInput.match(dateRegex);
+            if (!match) {
+              alert("Please enter a date in the format DD-MM-YYYY");
+              return false;
+            }
+            var day = parseInt(match[1]);
+            var month = parseInt(match[2]);
+            var year = parseInt(match[3]);
+            if (day < 1 || day > 31 || month < 1 || month > 12 || year < 1000 || year > 9999) {
+              alert("Please enter a valid date in the format DD-MM-YYYY");
+              return false;
+            }
+            document.getElementById("signupform").submit();
+          }
+        </script>
+   
+    
+</body>
+</html>

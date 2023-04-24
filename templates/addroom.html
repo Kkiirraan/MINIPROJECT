@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <title>add room</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #submit {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #submit:hover {
+            background-color: #0069d9;
+        }
+       
+    </style>
+</head>
+<body>
+    {% include 'nav2.html' %}
+<form action="/addroom" method="POST"  cache="no-cache">
+    <div style="display: flex;justify-content: center;">
+        <div>
+            <h2 style="text-align: center;">ADD EXAM DETAILS</h2>
+            <label for="exam_date">EXAM date:</label>
+            <input type="text" id="exam_date" name="exam_date" required placeholder="DD-MM-YYYY">
+            
+            <div id="wrongdate" class="warning"><h5>{{ wrongdate }}</h2></div>
+            <br>
+            <label for="exam_time">EXAM time:</label>
+            <input type="text" id="exam_time" name="exam_time" required placeholder="10:00 - 12:30">
+            <select id="dropdown" name="dropdown">
+                <option value="am">AM</option>
+                <option value="pm">PM</option>
+            </select>
+        
+            <h2 style="text-align: center;">ADD ROOM DETAILS</h2>
+            <label for="dept">Dept:</label>
+            <select id="dept" name="dept">
+                <option value="CSE">CSE</option>
+                <option value="CE">CE</option>
+                <option value="EEE">EEE</option>
+                <option value="EC">EC</option>
+                <option value="EL">EL</option>
+            </select>
+            <br><br>
+            <label for="no_room">Room no:&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+                &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+                &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            </label>
+            <input type="text" id="no_room" name="no_room" required>
+            <br><br>
+            <label for="no_bstd">Number of students in a bench:&ensp;&ensp;
+                &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+            </label>
+            <input type="text" id="no_bstd" name="no_bstd" required>
+            <br><br>
+            <label for="no_bench">Number of benches:&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+                &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;
+                &ensp;
+            </label>
+            <input type="text" id="no_bench" name="no_bench" required oninput="addStudent()">
+            <br><br>
+            <p>Maximum number of students you can allot :<span id="result"></span></p>
+            <br>
+            <label for="tot_std">Total number of students you want tot allot:</label>
+            <input type="text" id="tot_std" name="tot_std" required oninput="validate();check()">
+            <br>
+            <p id="message"></p>
+        </div>
+    </div>
+    <center><div id="roomadd" class="warning">{{ roomadd }}</div></center>
+    <br>
+    <div style="display: flex; justify-content: center;">
+        <input type="submit" value="submit" id="submit" disabled>
+    </div>
+    
+    <br>
+    <center><p>{{ message }}</p></center>
+</form>
+
+<script type="text/javascript">
+    function addStudent() {
+        var a=Number(document.getElementById("no_bstd").value);
+        var b=Number(document.getElementById("no_bench").value);
+        var c;
+        c=a*b;
+        document.getElementById("result").innerHTML = String(c);
+    }
+
+    function validate() {
+        var a=Number(document.getElementById("result").innerHTML);
+        var b=Number(document.getElementById("tot_std").value);
+        var c;
+        var message = document.getElementById("message");
+        if(b>a) {
+            message.innerText = "Total number of students must be less than: " + a;
+        } else {
+            message.innerText = "";
+        }
+    }
+
+    function check() {
+        var a=Number(document.getElementById("result").innerHTML);
+        var b=Number(document.getElementById("tot_std").value);
+        if(b<=a) {
+            document.getElementById("submit").disabled=false;
+        } else {
+            document.getElementById("submit").disabled=true;
+        }
+    }
+    
+</script>
+</body>
+</html>

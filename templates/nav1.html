@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Website</title>
+	<style>
+		/* Style the navigation bar */
+		.navbar {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			background-color: #333;
+			padding: 5px;
+			border-radius: 5px;
+		}
+	
+		/* Style the links inside the navigation bar */
+		.navbar a {
+			margin-right: 30px;
+			color: green;
+			text-decoration: none;
+			transition: background-color 0.3s ease;
+		}
+	
+		/* Change the color of links on hover */
+		.navbar a:hover {
+			background-color: #ddd;
+			color: black;
+		}
+		button {
+			background-color: green; /* Green */
+			border: none;
+			color: white;
+			padding: 10px 20px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			margin: 4px 2px;
+			cursor: pointer;
+			border-radius: 5px;
+		  }
+		  
+		
+	</style>
+	
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{url_for('login')}}" id="Login">
+            <button class="login-button">Login</button>
+
+          </a>
+          
+        
+    
+        <a href="{{url_for('home')}}" id="home">
+            <button class="login-button">home</button>
+
+          </a>
+          
+        
+    </div>
+    
+
+</body>
+<script>
+    
+</script>
+</html>
