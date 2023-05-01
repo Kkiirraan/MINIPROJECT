@@ -2,118 +2,28 @@
 <html>
 <head>
     <title>Room Details</title>
-    <style>
-        h2 {
-            text-align: center;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .room-details {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid #000;
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        tbody td div {
-            margin-bottom: 10px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        select, input[type="text"] {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            width: 100%;
-        }
-
-        .add-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .add-button:hover {
-            background-color: #0056b3;
-        }
-
-        .message {
-            margin-top: 20px;
-            text-align: center;
-            font-weight: bold;
-            color: #007bff;
-        }
-        #add-button {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-        }
-        #add-button:hover {
-            background-color: #0069d9;
-        }
-    </style>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/allot.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
 </head>
 <body>
     {% include 'nav2.html' %}
-    <h2>Allot Students</h2>
-    <p>Dept : {{room[0][3]}}</p>
-    <p>Room Number: {{ room[0][4] }}</p>
-    <p>Number of Benches: {{ room[0][6] }}</p>
-    <p>Number of Students per Bench: {{ room[0][5] }}</p>
-    <p>Capacity of the room: {{ room[0][7]}}</p>
-    <p>Date of exam: {{ room[0][0]}}</p>
-    <p>Time:{{room[0][1]}} {{room[0][2]}}</p>
+    <div class="pc">
+    <p>Dept :<br> {{room[0][3]}}</p>
+    <p>Room Number:<br> {{ room[0][4] }}</p>
+    <p>Number of Benches:<br> {{ room[0][6] }}</p>
+    <p>Number of Students per Bench:<br> {{ room[0][5] }}</p>
+    <p>Capacity of the room: <br>{{ room[0][7]}}</p>
+    <p>Date of exam:<br> {{ room[0][0]}}</p>
+    <p>Time:<br>{{room[0][1]}} {{room[0][2]}}</p>
+    </div>
+    <div class="formdiv">
     <table>
-
+        <h2>ALLOT STUDENTS</h2>
         <thead>
             <tr>
                 {% for i in range(room[0][5]) %}
@@ -127,16 +37,18 @@
                     <td>
                         <div>
                             <label>Class:</label>
-                            <select id="class-dropdown-{{ i+1 }}" class="class-dropdown">
+                            <select id="class-dropdown-{{ i+1 }}" class="class-dropdown" required>
                                 <option value="">Select a class</option>
-                                <option value="7">s1</option>
-                                <option value="7">s2</option>
-                                <option value="7">s4</option>
+                                <option value="S6 CSE A">S6 CSE A</option>
+                                <option value="S6 CSE B">S6 CSE B</option>
+                                <option value="S6 EEE ">S6 EEE</option>
+                                <option value="S6 EC ">S6 EC</option>
+                                <option value="S6 CE ">S6 CE</option>
                             </select>
                         </div>
                         <div>
                             <label>From:</label>
-                            <input type="text" id="from-{{ i+1 }}" class="from-input" oninput="getdetails('from-{{ i+1 }}')">
+                            <input type="text" id="from-{{ i+1 }}" class="from-input" oninput="getdetails('from-{{ i+1 }}')" required>
 
                         </div>
                         <div>
@@ -150,10 +62,15 @@
     </table>
     
     <br><br>
-       <center> <button type="submit" id="add-button">add</button></center>
-    
+
+    <center> <button type="submit" id="add-button">add</button></center>
+
+    <div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+       
+       
+          
         $(document).ready(function() {
             $('#options').change(function() {
                 var selectedOption = $(this).val();

@@ -1,0 +1,139 @@
+
+        h2 {
+            text-align: center;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(hsl(277, 100%, 56%), rgba(255, 255, 255, 0));
+            background-attachment: fixed
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .room-details {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(153, 236, 253, 0.881);
+            border-radius: 3px;
+        }
+
+         td {
+            border: 1px solid #0783b8;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            border: 1px solid,rgba(153, 236, 253, 0.881);
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        tbody td div {
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select, input[type="text"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 100%;
+        }
+
+        .add-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .add-button:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: #007bff;
+        }
+        #add-button {
+            background-color: #002a3c;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+        #add-button:hover {
+            background-color: #810b5e;
+        }
+        .formdiv
+        {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 10;    
+        max-width: 90%;
+        margin: auto;
+        padding: 30px;
+        border-bottom-color: #ffd012;
+        border-radius: 20px;
+        background-color: #ffffff;
+        position: relative;
+        }
+        p {
+            padding: 6px 12px;
+            background-color: #f4f9ff;
+            text-align: left;
+            font-size: 14px;
+            margin-bottom: 10px;
+            align-items: start;
+            display: inline-block;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+        .pc {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 80%;
+            margin: auto;
+            padding: 5px;
+          }
+          

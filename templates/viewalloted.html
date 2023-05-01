@@ -2,57 +2,13 @@
 <html>
 <head>
     <title>List of Rooms</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #e2e2e2;
-        }
-
-        .btn {
-            padding: 6px 12px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/viewalloted.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
 </head>
 <body>
     {% include 'nav2.html' %}
-    <h1>Allotment Details</h1>
+    <div class="formdiv">
+    <h1>ALLOTMENT DETAILS</h1>
     <table>
         
        
@@ -78,6 +34,7 @@
         </tr>
         {% endfor %}
     </table>
+</div>
     <script>
         
     </script>

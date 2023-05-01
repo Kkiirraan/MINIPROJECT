@@ -1,83 +1,105 @@
 <html>
+    <head>
     <title>home</title>
-    <style>
-    form {
-        max-width: 500px;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    h1 {
-        text-align: center;
-    }
-
-    .form-row {
-        margin: 10px 0;
-    }
-
-    label {
-        display: inline-block;
-        width: 150px;
-        font-weight: bold;
-    }
-
-    input[type="text"] {
-        width: 250px;
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    input[type="submit"] {
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    input[type="submit"]:hover {
-        background-color: #45a049;
-    }
-
-    .error {
-        color: red;
-        font-size: 14px;
-    }
-
-    .success {
-        color: green;
-        font-size: 14px;
-    }
-</style>
-
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
+    </head>
     <body>
          {% include 'nav1.html' %}
-         <center><h3>check your seat here</h3></center>
+         <div class="formcenter">
+         <center><h3><B>CHECK YOUR SEAT HERE!</B></h3></center>
          <form method="POST" action="/check">
-            <div class="form-row">
+            <div class="form-row1">
                 
                 <label for="id">Register no:</label>
-                    
+                 
                 <input type="text" id="id" name="id" required>
             </div>
         
             <br>
-            <div class="form-row">
+            <div class="form-row2">
+            
                 <label for="date">Date of exam:</label>
                 <input type="text" id="date" name="date" required placeholder="DD-MM-YYYY" onblur="validateDate()">
                 <div id="incorrectdate" class="warning">{{incorrectdate}}</div>
             </div>
         
             <br><br>
-            <div class="form-row">
-                <input type="submit" value="check">
-            </div>
+           
+            <div>
+            </div>           
+    {% if allot %}
+    <center><h2>ALLOTMENT DETAILS</h2></center>
+    <table>
+        
+       
+        <tr>
+            <th>Date of exam</th>
+            <th>time of exam</th>
             
+            
+            <th>register no. </th>
+            <th>name</th>
+            <th>room</th>
+            <th>seat no</th>
+           
+        </tr>
+        {% for room in allot %}
+        <tr>
+            <td>{{ room[0] }}</td>
+            <td>{{ room[1] }}
+            {{ room[2] }}</td>
+            <td>{{ room[3] }}</td>
+            <td>{{ room[4]}}</td>
+            <td>{{ room[7]}}
+                {{ room[8]}}</td>
+            <td>{{room[5]}}</td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    <div class="form-row">
+        <input type="submit" value="CHECK" class="button">
+    </div>
+    <div class="noallot">
+    <center><h4><p>{{noallot}}</p><h4></center>
+    </div>
+            </div>
         </form>
+        <div class="wrapper">
+            <div class="container">
+                <div class="bottombox">
+                <div class="row">
+                    <div class="col">
+                    
+                        <p><img src="{{ url_for('static', filename='v3_63.png') }}" alt="collegelogo"></p>
+                    
+                       <p>COLLEGE OF ENGINEERING KIDANGOOR
+                        <br>KIDANGOOR SOUTH P.O
+                        <br>KOTTAYAM-686 583</p>
+                  </div>
+                  <div class="col2">
+                    <p>
+                    <img src="{{ url_for('static', filename='v4_108.png') }}" alt="collegelogo" class="img2">
+                        <br>+91-48 22-256 056
+                        <br>+91 48 22 255 056
+                        <br>Admission Help Desk Number:- 9188255056,9400666144
+                    </p>
+                  </div>
+                  <div class="col3">
+                    <p>
+                    <img src="{{ url_for('static', filename='v4_107.png') }}" alt="collegelogo" class="img3"> 
+                    <br>cekcape@gmail.com<br>
+                    <img src="{{ url_for('static', filename='v4_106.png') }}" alt="collegelogo" class="img4">
+                    <br>04822 256056</p>
+                  </div>
+                </div>
+              </div>
+              
+         </div>
+        
+    </div>
         <script>
         function validateDate() {
             event.preventDefault();

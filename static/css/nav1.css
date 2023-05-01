@@ -1,0 +1,70 @@
+
+		.navbar {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			
+
+
+			padding: 5px;
+			border-radius: 5px;
+		}
+	
+		
+		.navbar a {
+			margin-right: 30px;
+			color: rgb(0, 6, 128);
+			text-decoration: none;
+			transition: background-color 0.3s ease;
+            align-self: self-end;
+		}
+		.navbar a:hover {
+			background-color: #ddd;
+			color: black;
+		}
+		button {
+			background-color: rgb(1, 56, 82); /* Green */
+			border: none;
+			color: rgb(255, 255, 255);
+			padding: 10px 20px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			margin: 4px 2px;
+			cursor: pointer;
+			border-radius: 5px;
+		  }
+		  
+body{
+    background-color: aqua;
+
+}          
+
+.button-container {
+    position: fixed;
+    top: 10px;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+  }
+  
+  #home {
+    margin-right: auto;
+  }
+  
+  #Login {
+    margin-left: auto;
+	
+  }
+  .navbar-logo {
+	position: absolute;
+	top: 0;
+	right: 150px;
+	padding: 10px;
+	width: 70px;
+  height: auto;
+  }
+  

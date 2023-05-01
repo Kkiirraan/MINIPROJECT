@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List of Rooms</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/count.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
+</head>
+<body>
+    {% include 'nav2.html' %}
+    <div class="formdiv">
+    <h1>Allotment Details</h1>
+    <table>
+        
+       
+        <tr>
+            <th>Total no. of allotted students</th>
+            <th>Remaining</th>
+        </tr>
+        <tr>
+            <td>{{ count }}</td>
+           <td>{{remaining}}</td>
+            
+        </tr>
+    
+    </table>
+</div>
+    <script>
+        
+    </script>
+</body>
+</html>

@@ -9,29 +9,12 @@
     <meta http-equiv="Expires" content="0">
 
     <title>add room</title>
-    <style>
-        
-        body {
-            font-family: Arial, sans-serif;
-        }
-        #submit {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        #submit:hover {
-            background-color: #0069d9;
-        }
-       
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/addroom.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
 </head>
 <body>
     {% include 'nav2.html' %}
-<form action="/addroom" method="POST"  cache="no-cache">
+<form action="/addroom" method="POST"  cache="no-cache" class="formclass">
     <div style="display: flex;justify-content: center;">
         <div>
             <h2 style="text-align: center;">ADD EXAM DETAILS</h2>

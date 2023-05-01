@@ -1,0 +1,72 @@
+
+        .navbar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            
+            padding: 5px;
+            border-radius: 5px;
+        }
+    
+        .navbar a {
+            margin-right: 30px;
+            color: green;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            background-color: beige;
+        }
+    
+        .navbar a:hover {
+            background-color: #810b5e;
+            color: #ddd;
+        }
+    
+        .login-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+    
+        .login-form input[type="submit"] {
+            margin-left: 30px;
+            margin-right: 50px;
+        }
+        
+        .home input[type="submit"],
+        .addroom input[type="submit"],
+        .viewroom input[type="submit"],
+        .logout-form input[type="submit"],
+        .allotdetails input[type="submit"],
+        .count input[type="submit"]{
+            margin-left: 30px;
+            margin-right: 30px;
+            color: #fff;
+            background-color: #002a3c;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+    
+        .home input[type="submit"]:hover,
+        .addroom input[type="submit"]:hover,
+        .viewroom input[type="submit"]:hover,
+        .logout-form input[type="submit"]:hover,
+        .allotdetails input[type="submit"]:hover,
+        .count input[type="submit"]:hover {
+            background-color: #810b5e;;
+            color: white;
+        }
+    
+    
+        .welcome {
+            text-align: left;
+            margin-top: 15px;
+            margin-right: 20px;
+            flex-grow: 1;
+        }
+        body{
+            background-color: aqua;
+        }

@@ -4,6 +4,9 @@ from datetime import datetime
 from jinja2.exceptions import TemplateNotFound
 import mysql.connector
 import bcrypt
+import inspect
+import traceback
+import time
 
 
 mydb=mysql.connector.connect(host="localhost",user="root",password="Kiranvijayan@2002",database="MINIPROJECT")
@@ -12,13 +15,16 @@ result=0
 
 
 app=Flask(__name__)
-app.secret_key = 'kiran'  
+app.secret_key = 'kiran'   
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 
 @app.route('/')
 def home():
+    noallot = session.pop('noallot','')
+    allot = session.pop('allot','')
     incorrectdate = session.pop('incorrectdate', '')
-    return render_template('home.html',logged_in=False,incorrectdate=incorrectdate)
+    return render_template('home.html',logged_in=False,incorrectdate=incorrectdate,allot=allot,noallot=noallot)
 
 
 @app.route('/login',methods=['GET','POST'])
@@ -127,7 +133,7 @@ def log():
     except mysql.connector.Error as e:
                 return "Exception error: {}".format(e)    
     if result is None or id != result[0]:
-                session['noaccount']="you doin't have an account please sign up"
+                session['noaccount']="YOU DOON'T HAVE AN ACCOUNT PLEASE SIGNUP FIRST"
                 return redirect('/login')
     else:
                 
@@ -142,7 +148,7 @@ def log():
                   
         
              else:
-                 session['noaccount']="incorrect password"
+                 session['noaccount']="INCORRECT PASSWORD"
                  return redirect('/login')
                    
               
@@ -185,8 +191,9 @@ def addroom():
                  result=mycursor.fetchone()
                  mydb.commit()
                  if result is None:
-                   sql = 'INSERT INTO room_details(e_date,e_time,mer,dept,room_no,std_bench,no_bench,tot_allot) VALUES(%s,%s,%s,%s,%s,%s,%s,%s);'
-                   val = (exam_date, exam_time, mer, dept, no_room, no_bstd, no_bench, tot_std)
+                   status=0
+                   sql = 'INSERT INTO room_details(e_date,e_time,mer,dept,room_no,std_bench,no_bench,tot_allot,status) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);'
+                   val = (exam_date, exam_time, mer, dept, no_room, no_bstd, no_bench, tot_std,status)
 
                    try:
                       mycursor.execute(sql, val)
@@ -217,6 +224,7 @@ def list_rooms():
     if 'id' in session:
         mycursor.execute("SELECT * FROM room_details;")
         rooms = mycursor.fetchall()
+        
         mydb.commit()
         return render_template('viewroom.html',logged_in=True,rooms=rooms)
         
@@ -225,6 +233,7 @@ def list_rooms():
 
 @app.route('/allot/<string:e_date>/<string:mer>/<string:dept>/<string:room_no>', methods=['GET', 'POST'])
 def allot(e_date, mer, dept, room_no):
+    duplicate=session.pop('duplicate','')
     if 'id' in session:
         mycursor.execute("SELECT * FROM room_details WHERE e_date=%s AND mer=%s AND dept=%s AND room_no=%s", (e_date,mer,dept,room_no,))
         room = mycursor.fetchall()
@@ -235,7 +244,7 @@ def allot(e_date, mer, dept, room_no):
             details=""
             for i in range(student_count):
                 student_list.append(f"Student {i+1}")
-            return render_template('allot.html',logged_in=True, room=room, bench_count=bench_count, student_count=student_count, student_list=student_list,details=details)    
+            return render_template('allot.html',logged_in=True, room=room, bench_count=bench_count, student_count=student_count, student_list=student_list,details=details,duplicate=duplicate)    
         else:
             return "room not found" 
     else:    
@@ -250,6 +259,10 @@ def deleteroom(e_date, mer, dept, room_no):
         values = (e_date, mer, dept, room_no)
         mycursor.execute(delete_query, values)
         mydb.commit()
+        delete_query = "DELETE FROM alloted_details WHERE date = %s AND mer = %s AND dept = %s AND roomno = %s"
+        values = (e_date, mer, dept, room_no)
+        mycursor.execute(delete_query, values)
+        mydb.commit()
         mycursor.execute("SELECT * FROM room_details")
         rooms = mycursor.fetchall()
         mydb.commit()
@@ -260,65 +273,70 @@ def deleteroom(e_date, mer, dept, room_no):
 @app.route('/add_data', methods=['POST','GET'])
 def add_data():
     try:
-      data = request.get_json()
-      print(data)
-      if data is not None:
-         
-         room_number=data["room_number"]
-         dept=data["dept"]
-         date=data["date"]
-         time=data["time"]
-         mer=data["mer"]
-         print(dept)
-         print(date)
-         print(time)
-         print(mer)
-         print(room_number)
-         students=data["students"]
-         print(students)
-         max_seat_no = 0
-        
-      
-         for i in students:
-                    clas=i['class']
-                    to=i['to']
-                    fro=i['from']
-                    mycursor.execute("SELECT * FROM student_details WHERE roll_no BETWEEN %s AND %s;",(fro,to))
-                    st=mycursor.fetchall()
-                    
-                    clas_count = 0
-                    seat_no=1
+        data = request.get_json()
+        print(data)
+        print(data['students'])
+        students = data["students"]
+        if data is not None:
+            room_number = data["room_number"]
+            dept = data["dept"]
+            date = data["date"]
+            Time = data["time"]
+            mer = data["mer"]
+            
+            max_seat_no = 0   
+            for i in students:
+                    clas = i['class']
+                    to = i['to']
+                    fro = i['from'] 
                     print(clas)
-                    print()
-                    
-                    for j in st:
-                        
-                        reg_no=j[0]
-                        name=j[1]
-                        print(name)
-                        rollno=j[4]
-                        print(reg_no)
-                        print(seat_no)
-                        mycursor.execute("SELECT MAX(seatno) FROM alloted_details WHERE dept=%s AND roomno = %s;", (dept,room_number,))
-                        result = mycursor.fetchone()
-                        if result[0] is not None:
-                            max_seat_no = result[0]
-                            
-                            
-                        seat_no = max_seat_no + 1    
-                        sql='INSERT INTO alloted_details(date,time,mer,reg_no,name,rollno,seatno,dept,roomno) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);'
-                        val=(date,time,mer,reg_no,name,rollno,seat_no,dept,room_number)
-        
-                        mycursor.execute(sql,val)
+                    print(to)
+                    print(fro)
+                    if clas and to and fro is not None:  
+                     mycursor.execute("SELECT reg_no,name,roll_no FROM student_details WHERE branch=%s AND roll_no BETWEEN %s AND %s;", (clas,fro, to))
+                     st = mycursor.fetchall()
+                     time.sleep(.000000001)
+                     print(st)
+                     clas_count = 0
+                     seat_no = max_seat_no + 1
+                     print(seat_no)
+                     for j in st:
+                        reg_no = j[0]
+                        name = j[1]
+                        rollno = j[2]
+                        mycursor.execute("SELECT MAX(seatno) FROM alloted_details WHERE dept=%s AND roomno = %s;", (dept, room_number,))
+                        result = mycursor.fetchall()
+                        time.sleep(.000000001)
+                        print(result[0][0])
+                        if result[0][0] is not None:
+                              max_seat_no = result[0][0] + 1
+                              print(max_seat_no)
+                        sql = 'INSERT INTO alloted_details(date,time,mer,reg_no,name,rollno,seatno,dept,roomno) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);'
+                        val = (date, Time, mer, reg_no, name, rollno, seat_no, dept, room_number)
+                        mycursor.execute(sql, val)
+                        time.sleep(.000000001)
                         mydb.commit()
-                        seat_no=seat_no+1
-                    clas_count=clas_count+1
-                    
-         return "success"
-      else:
+                        seat_no += 1
+                        print(seat_no)
+              
+                     clas_count += 1
+                     mycursor.execute("UPDATE room_details SET status= 1 WHERE e_date=%s AND mer=%s AND dept=%s AND room_no=%s;", (date,mer,dept,room_number,))
+                     result = mycursor.fetchone()
+                     time.sleep(.00000000001)
+                     mydb.commit()
+            session['duplicate'] = "sucess"
+            duplicate = session['duplicate']
+            print(duplicate)
+                 #print(render_template('duplicate.html', logged_in=True, duplicate=duplicate))
+                #return render_template('duplicate.html', logged_in=True, duplicate=duplicate)
+            return "success"
+                
+        else:
             return jsonify({'success': False, 'error': 'No data received'})
     except JSONDecodeError as e:
-        return "invaild method"
+        return "invalid method"
+
+
 
 @app.route('/allotdetails',methods=['GET','POST'])
 def allotdetails():
@@ -376,12 +394,29 @@ def check():
             allot = mycursor.fetchall()
             mydb.commit()
             if allot: 
-                return render_template('checkseat.html',allot=allot)
+                session['allot']=allot
+                return redirect('/')
             else:
-                return render_template('checkseat.html',noallot="seat is not alloted yet")
+                session['noallot']="SEAT IS NOT ALLOTTED"
+                return redirect('/')
         
         
+@app.route('/count',methods=['GET','POST'])
+def count():
+    if 'id' in session:
+        mycursor.execute("SELECT COUNT(*) FROM alloted_details;")
+        count = mycursor.fetchall()
+        count=int(count[0][0])
+        mydb.commit()
+       
+        mycursor.execute("SELECT COUNT(*) FROM student_details;")
+        remaining = mycursor.fetchall()
+        remaining=int(remaining[0][0])
+        mydb.commit()
+        return render_template('count.html',logged_in=True,count=count,remaining=remaining)
         
+    else:
+        return redirect(url_for('login'))      
         
 if __name__=='__main__':
     app.run(debug=True)
