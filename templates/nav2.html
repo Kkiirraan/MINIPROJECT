@@ -10,26 +10,26 @@
     <div class="navbar">
         {% if logged_in %}
         <div class="welcome">
-            <h1>Welcome</h1>
+            <h1>Welcome {{ session['id'] }}</h1>
         </div>
             
             <form class="home" action="/dashboard" method="POST">
                 <input type="submit" value="Home">
             </form>
             <form class="addroom" action="/add" method="POST">
-                <input type="submit" value="Add Room">
+                <input type="submit" value="Add room">
             </form>
             <form class="viewroom" action="/viewroom" method="POST">
-                <input type="submit" value="view added room">
+                <input type="submit" value="View added room">
             </form>
             <form class="allotdetails" action="/allotdetails" method="POST">
-                <input type="submit" value="view alloted details">
+                <input type="submit" value="View alloted details">
             </form>
             <form class="count" action="/count" method="POST">
-                <input type="submit" value="count details">
+                <input type="submit" value="Count details">
             </form>
             <form class="logout-form" action="/logout" method="POST">
-                <input type="submit" value="Logout" onclick="return confirmLogout()">
+                <input type="submit" value="logout" onclick="return confirmLogout()">
             </form>
         {% else %}
             <h1>Please log in to access the dashboard.</h1>
@@ -46,26 +46,24 @@
             // Replace "" with the appropriate URL for the Add Room page
             window.location.href = "";
         });
-
         document.querySelector(".logout-form").addEventListener("submit", function(event) {
-            event.preventDefault(); // prevent form submission
+            // Prevent form submission
+            event.preventDefault();
+          
+            // Call confirmLogout function
+            confirmLogout();
+          });
+          
+        function confirmLogout() {
             if (confirm("Are you sure you want to logout?")) {
-                // If user confirms, perform logout action
-                var form = event.target;
-                var xhr = new XMLHttpRequest();
-                xhr.open(form.method, form.action);
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        // If logout is successful, reload the page
-                        window.location.reload();
-                    } else {
-                        // If logout fails, display an error message
-                        console.error('Logout failed: ' + xhr.statusText);
-                    }
-                };
-                xhr.send(new FormData(form));
+              // If user confirms, submit the logout form
+              document.querySelector(".logout-form").submit();
+            } else {
+              // If user cancels, do nothing
+              return false;
             }
-        });
+          }
+          
     </script>
 </body>
 </html>

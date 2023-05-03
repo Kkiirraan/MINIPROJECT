@@ -64,7 +64,7 @@
     <br><br>
 
     <center> <button type="submit" id="add-button">add</button></center>
-
+<p id="output"></p>
     <div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -128,18 +128,16 @@
                         console.log(response);
                         $('#add-button').text('Alloted');
                         $('#add-button').prop('disabled', true);
-                       
+                        $("#output").text(response);
                       },
+                      
                       error: function(xhr, status, error) {
                         console.log(error);
                       }
                 });
             });
         });
-        
-        
     </script>
-    {{message}}
-    {{ details}}
+
 </body>
 </html>

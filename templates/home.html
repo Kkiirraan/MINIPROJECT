@@ -14,6 +14,7 @@
                 <label for="id">Register no:</label>
                  
                 <input type="text" id="id" name="id" required>
+                <div id="incorrectdate" class="w">{{no_reg}}</div>
             </div>
         
             <br>
@@ -63,7 +64,8 @@
         <input type="submit" value="CHECK" class="button">
     </div>
     <div class="noallot">
-    <center><h4><p>{{noallot}}</p><h4></center>
+        <center><h4 style="color: red;">{{noallot}}</h4></center>
+
     </div>
             </div>
         </form>
@@ -119,6 +121,7 @@
             }
             document.getElementById("signupform").submit();
           }
+          
         </script>
     </body>
     </html>

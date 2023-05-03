@@ -133,9 +133,14 @@ tr:hover {
 
 .form-row2.form-row1
 {
-    padding: 20px;
-    top: 5px;
-    align-content: center;
+  
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    width: 50%;
+
 }
 
  
@@ -232,4 +237,19 @@ tr:hover {
     margin-right: 10px;
     
   }
-  
+  .warning {
+    color: red;
+    font-size: 16px;
+    margin-left: 10px;
+    align-items: center;
+    position: relative;
+    margin: 10px;
+}
+
+input:invalid {
+    border-color: red;
+}
+.w{
+  color: red;
+  font-size: 10px;
+}

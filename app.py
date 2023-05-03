@@ -1,4 +1,4 @@
-from flask import Flask,request,render_template,redirect,jsonify,json,url_for,session,Response
+from flask import Flask,request,render_template,redirect,jsonify,json,url_for,session,Response,make_response,get_flashed_messages
 from json import JSONDecodeError
 from datetime import datetime
 from jinja2.exceptions import TemplateNotFound
@@ -9,6 +9,7 @@ import traceback
 import time
 
 
+
 mydb=mysql.connector.connect(host="localhost",user="root",password="Kiranvijayan@2002",database="MINIPROJECT")
 mycursor=mydb.cursor()
 result=0
@@ -17,14 +18,16 @@ result=0
 app=Flask(__name__)
 app.secret_key = 'kiran'   
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config['SESSION_REFRESH_EACH_REQUEST'] = True
 
 
 @app.route('/')
 def home():
+    no_reg = session.pop('no_reg','')
     noallot = session.pop('noallot','')
     allot = session.pop('allot','')
     incorrectdate = session.pop('incorrectdate', '')
-    return render_template('home.html',logged_in=False,incorrectdate=incorrectdate,allot=allot,noallot=noallot)
+    return render_template('home.html',logged_in=False,incorrectdate=incorrectdate,allot=allot,noallot=noallot,no_reg=no_reg)
 
 
 @app.route('/login',methods=['GET','POST'])
@@ -37,6 +40,7 @@ def login():
 def dashboard():
     
     if 'id' in session:
+        print(id)
         return render_template('dashboard.html', logged_in=True)
     else:
         return redirect(url_for('login'))
@@ -140,10 +144,16 @@ def log():
         mycursor.execute('SELECT password from signup_details WHERE t_id=%s ',(id,))
         result=mycursor.fetchone()
         mydb.commit()
+        mycursor.execute('SELECT t_name from signup_details WHERE t_id=%s ',(id,))
+        name=mycursor.fetchone()
+        name=name[0]
+        mydb.commit()
         if result:
              hashed_password = result[0].encode('utf-8')
              if bcrypt.checkpw(password, hashed_password):
-                  session['id'] = id
+                  session['id'] = name
+                  print(session['id'])
+                  
                   return redirect(url_for('dashboard'))
                   
         
@@ -233,8 +243,9 @@ def list_rooms():
 
 @app.route('/allot/<string:e_date>/<string:mer>/<string:dept>/<string:room_no>', methods=['GET', 'POST'])
 def allot(e_date, mer, dept, room_no):
-    duplicate=session.pop('duplicate','')
+    
     if 'id' in session:
+        duplicate=session.pop('duplicate','')
         mycursor.execute("SELECT * FROM room_details WHERE e_date=%s AND mer=%s AND dept=%s AND room_no=%s", (e_date,mer,dept,room_no,))
         room = mycursor.fetchall()
         if room:
@@ -272,7 +283,8 @@ def deleteroom(e_date, mer, dept, room_no):
 
 @app.route('/add_data', methods=['POST','GET'])
 def add_data():
-    try:
+ if 'id' in session: 
+      try:
         data = request.get_json()
         print(data)
         print(data['students'])
@@ -283,7 +295,9 @@ def add_data():
             date = data["date"]
             Time = data["time"]
             mer = data["mer"]
-            
+            mycursor.execute("SELECT * FROM room_details WHERE e_date=%s AND mer=%s AND dept=%s AND room_no=%s", (date,mer,dept,room_number,))
+            room = mycursor.fetchall()
+            time.sleep(.000000001)
             max_seat_no = 0   
             for i in students:
                     clas = i['class']
@@ -324,20 +338,58 @@ def add_data():
                      result = mycursor.fetchone()
                      time.sleep(.00000000001)
                      mydb.commit()
-            session['duplicate'] = "sucess"
-            duplicate = session['duplicate']
-            print(duplicate)
-                 #print(render_template('duplicate.html', logged_in=True, duplicate=duplicate))
-                #return render_template('duplicate.html', logged_in=True, duplicate=duplicate)
-            return "success"
-                
+    
+        
+            print(date)
+            print(mer)
+            print(dept)
+            print(room_number)
+            #return redirect(request.url)
+            """response = make_response(render_template('allot.html',room=room,duplicate=duplicate))
+            response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+            response.headers['Pragma'] = 'no-cache'
+            response.headers['Expires'] = '0'
+            return response"""
+            #return redirect(url_for('allot',e_date=date, mer=mer, dept=dept, room_no=room_number))
+            #return render_template('allot.html',logged_in=True,room=room,duplicate=duplicate)
+            #dat = {"message": "Sucess"} # use a dictionary to store the message
+            #return jsonify(dat)
+            return 'success'
         else:
-            return jsonify({'success': False, 'error': 'No data received'})
-    except JSONDecodeError as e:
+            #dat = {"message": "duplicate"} # use a dictionary to store the message
+            #return jsonify(dat)
+            return 'error'
+      except JSONDecodeError as e:
         return "invalid method"
-
-
-
+ else:   
+        
+        return redirect(url_for('login'))
+"""    
+@app.route('/all/<string:e_date>/<string:mer>/<string:dept>/<string:room_no>',methods=['GET', 'POST'])
+def all(e_date,mer,dept,room_no):
+   try: 
+    if request.method == 'POST':
+            # Handle the POST request here
+        # ...
+        return render_template('signup.html')
+    else:
+     date=e_date
+     mer=mer
+     dept=dept
+     room_number=room_no
+     print(date)
+     print(mer)
+     print(dept)
+     print(room_number)
+     #return redirect(request.url)
+   
+        
+    return render_template('signup.html')
+    #return redirect(url_for('allot',e_date=date, mer=mer, dept=dept, room_no=room_number))
+   except Exception as e:
+        print(f"Error: {e}")
+"""      
+        
 @app.route('/allotdetails',methods=['GET','POST'])
 def allotdetails():
     if 'id' in session:
@@ -358,8 +410,11 @@ def viewalloteddetails(e_date, mer, dept, room_no):
         mydb.commit()
         mycursor.execute("SELECT std_bench FROM room_details WHERE e_date=%s AND mer=%s AND dept=%s AND room_no=%s", (e_date,mer,dept,room_no,))
         bench=mycursor.fetchall()
+        print(bench)
+        print()
         mydb.commit()
         b=int(bench[0][0])
+        print(b)
         mycursor.execute("SELECT no_bench FROM room_details WHERE e_date=%s AND mer=%s AND dept=%s AND room_no=%s", (e_date,mer,dept,room_no,))
         no_bench=mycursor.fetchall()
         mydb.commit()
@@ -390,16 +445,19 @@ def check():
         if not reg_no or not date:
                 return "not got the data"   
         else:
-            mycursor.execute("SELECT * FROM alloted_details WHERE date=%s AND reg_no=%s", (date,reg_no,))
-            allot = mycursor.fetchall()
-            mydb.commit()
-            if allot: 
-                session['allot']=allot
-                return redirect('/')
+            if reg_no.startswith("KGR"):
+             mycursor.execute("SELECT * FROM alloted_details WHERE date=%s AND reg_no=%s", (date,reg_no,))
+             allot = mycursor.fetchall()
+             mydb.commit()
+             if allot: 
+                 session['allot']=allot
+                 return redirect('/')
+             else:
+                 session['noallot']="SEAT IS NOT ALLOTTED"
+                 return redirect('/')
             else:
-                session['noallot']="SEAT IS NOT ALLOTTED"
+                session['no_reg']="INVALID REGISTER NUMBER"
                 return redirect('/')
-        
         
 @app.route('/count',methods=['GET','POST'])
 def count():
@@ -416,7 +474,9 @@ def count():
         return render_template('count.html',logged_in=True,count=count,remaining=remaining)
         
     else:
-        return redirect(url_for('login'))      
+        return redirect(url_for('login'))    
+    
+   
         
 if __name__=='__main__':
     app.run(debug=True)
