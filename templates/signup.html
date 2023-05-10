@@ -12,7 +12,7 @@
 <body>
     {% include 'nav1.html' %}
     <center><h2>Sign up here</h2></center>
-    <form method="POST" action="/signup" id="signupform">
+    <form method="POST" id="signupform">
         <div style="display:flex; justify-content:center;">
             <label for="username">Name:</label>
             <input type="text" id="username" name="username" required>
@@ -30,7 +30,7 @@
                 <input type="text" id="dob" name="dob" required placeholder="DD-MM-YYYY" onblur="validateDate()">
         </div>
         
-        <div id="incorrectdate" class="warning">{{incorrectdate}}</div>
+        <div id="incorrectdate" class="warning"></div>
         <br> 
         <div style="display:flex; justify-content:center;">
             <label for="phone">Phone:</label>
@@ -57,7 +57,7 @@
                 <input type="password" id="confirm_password" name="confirm_password" required>
                 
         </div>
-        <div id="passwordMatchWarning" class="warning">{{doesnotmatch}}</div>
+        <div id="doesnotmatch" class="warning"></div>
         
         <br><br>
         <h3>Security questions?</h3>
@@ -69,14 +69,15 @@
         <input type="text" id="siblings" name="siblings" required placeholder="type yes or no">
         <label for="cinema">Do you like cinema?</label>
         <input type="text" id="cinema" name="cinema" required placeholder="type yes or no">
-        <div id="accountalready" class="warning">{{accountalready}}</div>
-        <div id="incorrectid" class="warning">{{incorrectid}}</div>
+        <div id="accountalready" class="warning"></div>
+        <div id="incorrectid" class="warning"></div>
         <div>
             <center>
-                <input type="submit" value="sign up">
+                <input type="submit" value="sign up" id="submit">
             </center>
         </div>
     </form>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
         var passwordField = document.getElementById('password');
         var confirmPasswordField = document.getElementById('confirm_password');
@@ -112,6 +113,47 @@
             }
             document.getElementById("signupform").submit();
           }
+          $(document).ready(function() {
+            $('#submit').click(function(event) {
+              event.preventDefault();  // prevent default form submission behavior
+          
+              // get form data
+              var form_data = {
+                'username': $('#username').val(),
+                'id': $('#id').val(),
+                'dob': $('#dob').val(),
+                'phone': $('#phone').val(),
+                'email': $('#email').val(),
+                'password': $('#password').val(),
+                'confirm_password': $('#confirm_password').val(),
+                'fcolor': $('#fcolor').val(),  
+                'bgroup': $('#bgroup').val(),
+                'siblings': $('#siblings').val(),
+                'cinema': $('#cinema').val()      
+              }
+               
+              var jsonData = JSON.stringify(form_data);
+              // send ajax POST request to backend
+              $.ajax({
+                type: 'POST',
+                url: '{{ url_for("signup") }}',
+                contentType: 'application/json',
+                data: jsonData,
+                success: function(response) {
+                    console.log(response);
+                    $("#accountalready").text(response.accountalready);
+                    $("#incorrectdate").text(response.incorrectdate);
+                    $("#doesnotmatch").text(response.doesnotmatch);
+                    $("#incorrectid").text(response.incorrectid);
+                },    
+                
+                error: function(response) {
+                  // handle error response from backend
+                  console.log(response);
+                }
+              });
+            });
+          });
         </script>
    
     

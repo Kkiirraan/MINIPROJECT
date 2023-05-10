@@ -14,14 +14,14 @@
 </head>
 <body>
     {% include 'nav2.html' %}
-<form action="/addroom" method="POST"  cache="no-cache" class="formclass">
+<form method="POST"  cache="no-cache" class="formclass">
     <div style="display: flex;justify-content: center;">
         <div>
             <h2 style="text-align: center;">ADD EXAM DETAILS</h2>
             <label for="exam_date">EXAM date:</label>
             <input type="text" id="exam_date" name="exam_date" required placeholder="DD-MM-YYYY">
             
-            <div id="wrongdate" class="warning"><h5>{{ wrongdate }}</h2></div>
+            <div id="wrongdate" class="warning"><h5></h2></div>
             <br>
             <label for="exam_time">EXAM time:</label>
             <input type="text" id="exam_time" name="exam_time" required placeholder="10:00 - 12:30">
@@ -65,16 +65,15 @@
             <p id="message"></p>
         </div>
     </div>
-    <center><div id="roomadd" class="warning">{{ roomadd }}</div></center>
+    
     <br>
     <div style="display: flex; justify-content: center;">
         <input type="submit" value="submit" id="submit" disabled>
     </div>
     
     <br>
-    <center><p>{{ message }}</p></center>
-</form>
-
+    <center><div id="roomadd" ></div></center>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script type="text/javascript">
     function addStudent() {
         var a=Number(document.getElementById("no_bstd").value);
@@ -105,7 +104,42 @@
             document.getElementById("submit").disabled=true;
         }
     }
-    
+    $(document).ready(function() {
+        $('#submit').click(function(event) {
+          event.preventDefault();  // prevent default form submission behavior
+      
+          // get form data
+          var form_data = {
+            'exam_date': $('#exam_date').val(),
+            'exam_time': $('#exam_time').val(),
+            'dropdown': $('#dropdown').val(),
+            'dept': $('#dept').val(),
+            'no_room': $('#no_room').val(),
+            'no_bstd': $('#no_bstd').val(),
+            'no_bench': $('#no_bench').val(),
+            'tot_std': $('#tot_std').val()
+          };
+          var jsonData = JSON.stringify(form_data);
+          // send ajax POST request to backend
+          $.ajax({
+            type: 'POST',
+            url: '{{ url_for("addroom") }}',
+            contentType: 'application/json',
+            data: jsonData,
+            success: function(response) {
+              // handle success response from backend
+              console.log(response);
+              $("#submit").val("submitted");
+              $("#roomadd").text(response.roomadd);
+              $("#wrongdate").text(response.wrongdate);
+            },
+            error: function(response) {
+              // handle error response from backend
+              console.log(response);
+            }
+          });
+        });
+      });
 </script>
 </body>
 </html>

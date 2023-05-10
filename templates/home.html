@@ -4,6 +4,9 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
     </head>
+    <style>
+     
+    </style>
     <body>
          {% include 'nav1.html' %}
          <div class="formcenter">
@@ -14,7 +17,7 @@
                 <label for="id">Register no:</label>
                  
                 <input type="text" id="id" name="id" required>
-                <div id="incorrectdate" class="w">{{no_reg}}</div>
+                <center><h4 style="color: red;" id="no_reg"></h4></center>
             </div>
         
             <br>
@@ -22,87 +25,68 @@
             
                 <label for="date">Date of exam:</label>
                 <input type="text" id="date" name="date" required placeholder="DD-MM-YYYY" onblur="validateDate()">
-                <div id="incorrectdate" class="warning">{{incorrectdate}}</div>
+                
+                <center><h4 style="color: red;" id="incorrectdate"></h4></center>
+
             </div>
         
             <br><br>
-           
-            <div>
+            <center><h4 style="color: red;" id="noallot"></h4></center>
+
+            <div id="allotment-table-container" align="center"></div>
+        </div>
             </div>           
-    {% if allot %}
-    <center><h2>ALLOTMENT DETAILS</h2></center>
-    <table>
-        
-       
-        <tr>
-            <th>Date of exam</th>
-            <th>time of exam</th>
-            
-            
-            <th>register no. </th>
-            <th>name</th>
-            <th>room</th>
-            <th>seat no</th>
-           
-        </tr>
-        {% for room in allot %}
-        <tr>
-            <td>{{ room[0] }}</td>
-            <td>{{ room[1] }}
-            {{ room[2] }}</td>
-            <td>{{ room[3] }}</td>
-            <td>{{ room[4]}}</td>
-            <td>{{ room[7]}}
-                {{ room[8]}}</td>
-            <td>{{room[5]}}</td>
-            
-        </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
+   
+    
     <div class="form-row">
-        <input type="submit" value="CHECK" class="button">
+        <input type="submit" value="CHECK" class="button" id="submit">
     </div>
     <div class="noallot">
-        <center><h4 style="color: red;">{{noallot}}</h4></center>
-
-    </div>
-            </div>
-        </form>
-        <div class="wrapper">
-            <div class="container">
-                <div class="bottombox">
-                <div class="row">
-                    <div class="col">
-                    
-                        <p><img src="{{ url_for('static', filename='v3_63.png') }}" alt="collegelogo"></p>
-                    
-                       <p>COLLEGE OF ENGINEERING KIDANGOOR
-                        <br>KIDANGOOR SOUTH P.O
-                        <br>KOTTAYAM-686 583</p>
-                  </div>
-                  <div class="col2">
-                    <p>
-                    <img src="{{ url_for('static', filename='v4_108.png') }}" alt="collegelogo" class="img2">
-                        <br>+91-48 22-256 056
-                        <br>+91 48 22 255 056
-                        <br>Admission Help Desk Number:- 9188255056,9400666144
-                    </p>
-                  </div>
-                  <div class="col3">
-                    <p>
-                    <img src="{{ url_for('static', filename='v4_107.png') }}" alt="collegelogo" class="img3"> 
-                    <br>cekcape@gmail.com<br>
-                    <img src="{{ url_for('static', filename='v4_106.png') }}" alt="collegelogo" class="img4">
-                    <br>04822 256056</p>
-                  </div>
-                </div>
-              </div>
-              
-         </div>
         
     </div>
-        <script>
+            
+</form>
+<div class="wrapper">
+  <div class="container">
+<div class="group">
+  <div class="align-right">
+      <div class="img333">
+          <img src="{{ url_for('static', filename='v3_63.png') }}" alt="collegelogo" class="img2">
+      </div>
+      <ul>
+          
+           <li>COLLEGE OF ENGINEERING KIDANGOOR</li>
+           <li>KIDANGOOR SOUTH P.O</li>
+           <li>KOTTAYAM-686 583</li>
+          </ul>
+  </div>
+  <div class="align-center">
+      <ul>
+          <li><img src="{{ url_for('static', filename='v4_108.png') }}" alt="mobilephone" class="img3"></li>
+          <li>+91-48 22-256 056</li>
+          <li>+91 48 22 255 056</li>
+          <li>Admission Help Desk Number:- 9188255056,9400666144</li>
+      </ul>
+  </div>
+   
+  <div class="align-left">
+      <ul> 
+          <li><img src="{{ url_for('static', filename='v4_107.png') }}" alt="mail" class="img3"> </li>
+          <li>cek@gmail.com</li>
+          <li><img src="{{ url_for('static', filename='v4_106.png') }}" alt="telephone" class="img3"></li>
+          <li>04822 256056</li>
+      </ul>
+  </div>
+   
+</div>
+        
+</div>
+</div>
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script type="text/javascript">
+
         function validateDate() {
             event.preventDefault();
             var dateInput = document.getElementById("date").value;
@@ -119,9 +103,51 @@
               alert("Please enter a valid date in the format DD-MM-YYYY");
               return false;
             }
-            document.getElementById("signupform").submit();
-          }
+        }
+
+          $(document).ready(function() {
+            $('#submit').click(function(event) {
+              event.preventDefault();  // prevent default form submission behavior
           
+              // get form data
+              var form_data = {
+                'id': $('#id').val(),
+                'date': $('#date').val()
+              }
+               
+              var jsonData = JSON.stringify(form_data);
+              // send ajax POST request to backend
+              $.ajax({
+                type: 'POST',
+                url: '{{ url_for("check") }}',
+                contentType: 'application/json',
+                data: jsonData,
+                success: function(response) {
+                    console.log(response);
+                    $("#noallot").text(response.noallot);
+                    $("#incorrectdate").text(response.incorrectdate);
+                    $("#no_reg").text(response.no_reg);
+                    var allot = response.allot;
+                    if(response.allot){
+                        var table = '<table id="allotment-table"><tr><th>Date of exam</th><th>time of exam</th><th>register no.</th><th>name</th><th>room</th><th>seat no</th></tr>';
+                            for (var i = 0; i < allot.length; i++) {
+                              table += '<tr><td>' + allot[i][0] + '</td><td>' + allot[i][1] + ' ' + allot[i][2] + '</td><td>' + allot[i][3] + '</td><td>' + allot[i][4] + '</td><td>' + allot[i][7] + ' ' + allot[i][8] + '</td><td>' + allot[i][5] + '</td></tr>';
+                            }
+                            table += '</table>';
+                            $('#allotment-table-container').html(table);
+                           
+
+                    }
+                   
+                },    
+                
+                error: function(response) {
+                  // handle error response from backend
+                  console.log(response);
+                }
+              });
+            });
+          });
         </script>
     </body>
     </html>

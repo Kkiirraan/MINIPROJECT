@@ -23,11 +23,8 @@ app.config['SESSION_REFRESH_EACH_REQUEST'] = True
 
 @app.route('/')
 def home():
-    no_reg = session.pop('no_reg','')
-    noallot = session.pop('noallot','')
-    allot = session.pop('allot','')
-    incorrectdate = session.pop('incorrectdate', '')
-    return render_template('home.html',logged_in=False,incorrectdate=incorrectdate,allot=allot,noallot=noallot,no_reg=no_reg)
+    
+    return render_template('home.html',logged_in=False)
 
 
 @app.route('/login',methods=['GET','POST'])
@@ -48,10 +45,9 @@ def dashboard():
     
 @app.route('/add',methods=['GET','POST'])
 def add():
-    roomadd=session.pop('roomadd','') 
-    wrongdate = session.pop('wrongdate', '')
+    
     if 'id' in session:
-        return render_template('addroom.html', logged_in=True,wrongdate=wrongdate,roomadd=roomadd)
+        return render_template('addroom.html', logged_in=True)
     else:
         return redirect(url_for('login'))
 
@@ -68,31 +64,34 @@ def signin():
 def signup():
 
     if request.method=='POST':
-        name=request.form.get('username')
-        id=request.form.get('id')
-        dob=request.form.get('dob')
+        data = request.get_json()
+        name=data['username']
+        id=data['id']
+        dob=data['dob']
         try:
            dob = datetime.strptime(dob, '%d-%m-%Y').strftime('%Y-%m-%d')
         except ValueError:
+            response = {'incorrectdate': 'Please enter the date in the format DD-MM-YYYY'}
+            return jsonify(response)
             session['incorrectdate'] = "Please enter the date in the format DD-MM-YYYY"
             return redirect('/signin')   
         
         
-        phone=request.form.get('phone')
-        email=request.form.get('email')
-        password=request.form.get('password')
-        confirm_password=request.form.get('confirm_password')
-        fcolor=request.form.get('fcolor')
-        bgroup=request.form.get('bgroup')
-        siblings=request.form.get('siblings')
-        cinema=request.form.get('cinema')
+        phone=data['phone']
+        email=data['email']
+        password=data['password']
+        confirm_password=data['confirm_password']
+        fcolor=data['fcolor']
+        bgroup=data['bgroup']
+        siblings=data['siblings']
+        cinema=data['cinema']
         if not name or not id or not dob or not phone or not fcolor or not bgroup or not siblings or not cinema or not email or not password or not confirm_password:
             return "not got the data"
         elif confirm_password != password:
-            session['doesnotmatch'] = "Passwords do not match"
-            return redirect('/signin')
+            response = {'doesnotmatch': 'Password do not match'}
+            return jsonify(response)
+            
         else:
-            session.pop('doesnotmatch', None)
             try:
                  mycursor.execute('SELECT t_id FROM teachers_details WHERE t_name=%s AND t_dob=%s',(name,dob))
                  result=mycursor.fetchone()
@@ -101,8 +100,9 @@ def signup():
                 return "Exception error: {}".format(e)
              
             if result is None or id != result[0]:
-                session['incorrectid']="Sign in failed incorrect details"
-                return redirect('/signin')
+                response = {'incorrectid': 'Sign in failed incorrect details'}
+                return jsonify(response)
+                
             else:
                  mycursor.execute('SELECT t_id FROM signup_details WHERE t_name=%s AND t_dob=%s',(name,dob))
                  result=mycursor.fetchone()
@@ -119,13 +119,17 @@ def signup():
                    
                    return render_template('signupsucess.html')
                  else:
-                     session['accountalready']="Account already exist please login"
-                     return redirect('/signin')  
+                     response = {'accountalready': 'Account already exists'}
+                     return jsonify(response)
+                     
           
 @app.route('/log',methods=['GET','POST'])
 def log():
-    id=request.form.get('id')
-    password=request.form.get('password').encode('utf-8')
+  if request.method == 'POST':
+    data = request.get_json()
+    print(data)
+    id=data['id']
+    password=data['password'].encode('utf-8')
     
     if not id or not password:
         return "not get data"
@@ -137,8 +141,9 @@ def log():
     except mysql.connector.Error as e:
                 return "Exception error: {}".format(e)    
     if result is None or id != result[0]:
-                session['noaccount']="YOU DOON'T HAVE AN ACCOUNT PLEASE SIGNUP FIRST"
-                return redirect('/login')
+                response = {"noaccount": "YOU DOON'T HAVE AN ACCOUNT PLEASE SIGNUP FIRST"}
+                return jsonify(response)
+            
     else:
                 
         mycursor.execute('SELECT password from signup_details WHERE t_id=%s ',(id,))
@@ -154,13 +159,15 @@ def log():
                   session['id'] = name
                   print(session['id'])
                   
-                  return redirect(url_for('dashboard'))
+                  response = {"redirect": True}
+                  return jsonify(response)
+
                   
         
              else:
-                 session['noaccount']="INCORRECT PASSWORD"
-                 return redirect('/login')
-                   
+                 response = {"noaccount": "INCORRECT PASSWORD"}
+                 return jsonify(response)
+                 
               
 @app.route('/logout', methods=['POST'])
 def logout():
@@ -169,29 +176,27 @@ def logout():
 
 @app.route('/addroom', methods=['GET', 'POST'])
 def addroom():
-    response = Response()
-    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
+    
     if request.method == 'POST':
-        exam_date = request.form.get('exam_date')
-        exam_time = request.form.get('exam_time')
-        mer = request.form.get('dropdown')
-        dept = request.form.get('dept')
-        no_room = request.form.get('no_room')
-        no_bstd = request.form.get('no_bstd')
-        no_bench = request.form.get('no_bench')
-        tot_std = request.form.get('tot_std')
-
+        data = request.get_json()
+        exam_date = data['exam_date']
+        exam_time = data['exam_time']
+        mer = data['dropdown']
+        dept = data['dept']
+        no_room = data['no_room']
+        no_bstd = data['no_bstd']
+        no_bench = data['no_bench']
+        tot_std = data['tot_std']
         if exam_date is None:
-            session['wrongdate'] = "Please enter the date in the format DD-MM-YYYY"
-            return redirect('/addroom')
+            response = {'wrongdate': 'Please enter the date in the format DD-MM-YYYY'}
+            return jsonify(response)
         else:
             try:
                exam_date = datetime.strptime(exam_date, '%d-%m-%Y').strftime('%Y-%m-%d')
             except ValueError:
-              session['wrongdate'] = "Please enter the date in the format DD-MM-YYYY"
-              return redirect('/wrongedate')
+              response = {'wrongdate': 'Please enter the date in the format DD-MM-YYYY'}
+              return jsonify(response)
+              
 
             if not exam_date or not exam_time or not mer or not dept or not no_room or not no_bstd or not no_bench or not tot_std:
               return "Did not receive all the required data"
@@ -208,26 +213,17 @@ def addroom():
                    try:
                       mycursor.execute(sql, val)
                       mydb.commit()
-                      session['roomadd'] = "Room added successfully"
-                      return redirect('/addroomsuccess')
+                      response = {'roomadd': 'room added sucessfully'}
+                      return jsonify(response)
                    except Exception as e:
                       return "Error adding room: {}".format(str(e))
                  else:
-                     session['roomadd'] = "Room already exists"
-                     return redirect('/addroomsuccess')
+                     response = {'roomadd': 'room already'}
+                     return jsonify(response)
     else:
         return "Invalid request"
     
     
-@app.route('/wrongedate')
-def wrongedate():
-    return redirect('/add')
-
-@app.route('/addroomsuccess')
-def addroomsuccess():
-    return redirect('/add')
-
-
 
 @app.route('/viewroom',methods=['GET','POST'])
 def list_rooms():
@@ -286,109 +282,105 @@ def add_data():
  if 'id' in session: 
       try:
         data = request.get_json()
-        print(data)
-        print(data['students'])
         students = data["students"]
         if data is not None:
             room_number = data["room_number"]
             dept = data["dept"]
             date = data["date"]
-            Time = data["time"]
+            etime = data["time"]
             mer = data["mer"]
             mycursor.execute("SELECT * FROM room_details WHERE e_date=%s AND mer=%s AND dept=%s AND room_no=%s", (date,mer,dept,room_number,))
             room = mycursor.fetchall()
+           
             time.sleep(.000000001)
-            max_seat_no = 0   
+            max_seat_no = 0
             for i in students:
-                    clas = i['class']
-                    to = i['to']
-                    fro = i['from'] 
-                    print(clas)
-                    print(to)
-                    print(fro)
-                    if clas and to and fro is not None:  
-                     mycursor.execute("SELECT reg_no,name,roll_no FROM student_details WHERE branch=%s AND roll_no BETWEEN %s AND %s;", (clas,fro, to))
+                  to = i['to']
+                  fro = i['from'] 
+                  max_seat_no = max_seat_no+((int(to)-(int(fro)))+1)
+            if max_seat_no>room[0][7]:
+                return f"Exeeds Capacity of the room you can allot upto {room[0][7]}"  
+            else:     
+             for i in students:
+                  clas = i['class']
+                  to = i['to']
+                  fro = i['from'] 
+                  
+                  if clas and to and fro is not None:  
+                     mycursor.execute("SELECT reg_no,name,roll_no,branch FROM student_details WHERE branch=%s AND roll_no BETWEEN %s AND %s;", (clas,fro, to))
                      st = mycursor.fetchall()
-                     time.sleep(.000000001)
-                     print(st)
-                     clas_count = 0
-                     seat_no = max_seat_no + 1
-                     print(seat_no)
-                     for j in st:
+                     if not st:
+                         return "Odd Sem cannot be Allot"
+                     else:
+                      time.sleep(.000000001)
+                      #print(st)
+                      seat_no = max_seat_no + 1
+                      #print(seat_no)
+                      for j in st:
                         reg_no = j[0]
                         name = j[1]
                         rollno = j[2]
+                        br=j[3]
                         mycursor.execute("SELECT MAX(seatno) FROM alloted_details WHERE dept=%s AND roomno = %s;", (dept, room_number,))
                         result = mycursor.fetchall()
                         time.sleep(.000000001)
-                        print(result[0][0])
                         if result[0][0] is not None:
                               max_seat_no = result[0][0] + 1
-                              print(max_seat_no)
-                        sql = 'INSERT INTO alloted_details(date,time,mer,reg_no,name,rollno,seatno,dept,roomno) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);'
-                        val = (date, Time, mer, reg_no, name, rollno, seat_no, dept, room_number)
-                        mycursor.execute(sql, val)
+                              
+                        mycursor.execute("SELECT flag,name,reg_no FROM alloted_details WHERE etime = %s AND mer = %s AND reg_no=%s;", (etime,mer,reg_no,))
+                        flg = mycursor.fetchall()
                         time.sleep(.000000001)
-                        mydb.commit()
-                        seat_no += 1
-                        print(seat_no)
-              
-                     clas_count += 1
-                     mycursor.execute("UPDATE room_details SET status= 1 WHERE e_date=%s AND mer=%s AND dept=%s AND room_no=%s;", (date,mer,dept,room_number,))
-                     result = mycursor.fetchone()
-                     time.sleep(.00000000001)
-                     mydb.commit()
-    
-        
-            print(date)
-            print(mer)
-            print(dept)
-            print(room_number)
-            #return redirect(request.url)
-            """response = make_response(render_template('allot.html',room=room,duplicate=duplicate))
-            response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-            response.headers['Pragma'] = 'no-cache'
-            response.headers['Expires'] = '0'
-            return response"""
-            #return redirect(url_for('allot',e_date=date, mer=mer, dept=dept, room_no=room_number))
-            #return render_template('allot.html',logged_in=True,room=room,duplicate=duplicate)
-            #dat = {"message": "Sucess"} # use a dictionary to store the message
-            #return jsonify(dat)
-            return 'success'
-        else:
-            #dat = {"message": "duplicate"} # use a dictionary to store the message
-            #return jsonify(dat)
-            return 'error'
+                        
+                        if not flg:
+                           sql = 'INSERT INTO alloted_details(date,etime,mer,reg_no,name,rollno,seatno,dept,roomno) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);'
+                           val = (date, etime, mer, reg_no, name, rollno, seat_no, dept, room_number)
+                           mycursor.execute(sql, val)
+                           time.sleep(.000000001)
+                           mydb.commit()
+                           seat_no += 1
+                           
+                           mycursor.execute("UPDATE alloted_details SET flag= 1 WHERE date=%s AND etime=%s AND mer=%s  AND reg_no=%s AND name=%s;", (date,etime,mer,reg_no,name,))
+                           result = mycursor.fetchone()
+                           time.sleep(.00000000001)
+                           mydb.commit()
+                           mycursor.execute("UPDATE room_details SET status= 1 WHERE e_date=%s AND mer=%s AND dept=%s AND room_no=%s;", (date,mer,dept,room_number,))
+                           result = mycursor.fetchone()
+                           time.sleep(.00000000001)
+                           mydb.commit()
+                    
+                        else:
+                         for item in flg:
+                          
+                          if item[0] == 0:      
+                           sql = 'INSERT INTO alloted_details(date,etime,mer,reg_no,name,rollno,seatno,dept,roomno) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s);'
+                           val = (date, etime, mer, reg_no, name, rollno, seat_no, dept, room_number)
+                           mycursor.execute(sql, val)
+                           time.sleep(.000000001)
+                           mydb.commit()
+                           seat_no += 1
+                           
+                           mycursor.execute("UPDATE alloted_details SET flag= 1 WHERE date=%s AND etime=%s AND mer=%s  AND reg_no=%s AND name=%s;", (date,etime,mer,reg_no,name,))
+                           result = mycursor.fetchone()
+                           time.sleep(.00000000001)
+                           mydb.commit()
+                           mycursor.execute("UPDATE room_details SET status= 1 WHERE e_date=%s AND mer=%s AND dept=%s AND room_no=%s;", (date,mer,dept,room_number,))
+                           result = mycursor.fetchone()
+                           time.sleep(.00000000001)
+                           mydb.commit()
+                          else:
+                             delete_query = "DELETE FROM alloted_details WHERE date = %s AND mer = %s AND dept = %s AND roomno = %s"
+                             values = (date, mer, dept,room_number)
+                             mycursor.execute(delete_query, values)
+                             mydb.commit() 
+                             time.sleep(.00000000001)
+                             return f"Aready alloted for {item[1]} of class {br}"  
+            return "success"             
       except JSONDecodeError as e:
         return "invalid method"
  else:   
         
         return redirect(url_for('login'))
-"""    
-@app.route('/all/<string:e_date>/<string:mer>/<string:dept>/<string:room_no>',methods=['GET', 'POST'])
-def all(e_date,mer,dept,room_no):
-   try: 
-    if request.method == 'POST':
-            # Handle the POST request here
-        # ...
-        return render_template('signup.html')
-    else:
-     date=e_date
-     mer=mer
-     dept=dept
-     room_number=room_no
-     print(date)
-     print(mer)
-     print(dept)
-     print(room_number)
-     #return redirect(request.url)
-   
-        
-    return render_template('signup.html')
-    #return redirect(url_for('allot',e_date=date, mer=mer, dept=dept, room_no=room_number))
-   except Exception as e:
-        print(f"Error: {e}")
-"""      
+    
         
 @app.route('/allotdetails',methods=['GET','POST'])
 def allotdetails():
@@ -434,14 +426,16 @@ def viewalloteddetails(e_date, mer, dept, room_no):
 def check():
 
     if request.method=='POST':
-        reg_no=request.form.get('id')
-        
-        date=request.form.get('date')
+        data = request.get_json()
+        print(data)
+        reg_no=data['id']
+        date=data['date']
         try:
            date = datetime.strptime(date, '%d-%m-%Y').strftime('%Y-%m-%d')
         except ValueError:
-            session['incorrectdate'] = "Please enter the date in the format DD-MM-YYYY"
-            return redirect('/check') 
+            response = {'incorrectdate': 'Please enter the date in the format DD-MM-YYYY'}
+            return jsonify(response)
+            
         if not reg_no or not date:
                 return "not got the data"   
         else:
@@ -450,31 +444,33 @@ def check():
              allot = mycursor.fetchall()
              mydb.commit()
              if allot: 
-                 session['allot']=allot
-                 return redirect('/')
+                 return jsonify({'allot': allot})
+                 
              else:
-                 session['noallot']="SEAT IS NOT ALLOTTED"
-                 return redirect('/')
+                 response = {'noallot': 'SEAT IS NOT ALLOTTED'}
+                 return jsonify(response)
+                 
             else:
-                session['no_reg']="INVALID REGISTER NUMBER"
-                return redirect('/')
+                response = {'no_reg': 'INVALID REGISTER NUMBER'}
+                return jsonify(response)
+               
         
 @app.route('/count',methods=['GET','POST'])
 def count():
     if 'id' in session:
-        mycursor.execute("SELECT COUNT(*) FROM alloted_details;")
+        mycursor.execute("SELECT date, etime, mer, COUNT(*) FROM alloted_details GROUP BY date, etime, mer;")
         count = mycursor.fetchall()
-        count=int(count[0][0])
         mydb.commit()
-       
+        print(count)
         mycursor.execute("SELECT COUNT(*) FROM student_details;")
         remaining = mycursor.fetchall()
-        remaining=int(remaining[0][0])
+        remaining = int(remaining[0][0])
         mydb.commit()
-        return render_template('count.html',logged_in=True,count=count,remaining=remaining)
-        
+        return render_template('count.html', logged_in=True, count=count, remaining=remaining)
     else:
-        return redirect(url_for('login'))    
+        return redirect(url_for('login'))
+  
+    
     
    
         

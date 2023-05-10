@@ -11,7 +11,7 @@
 <body>
     {% include 'nav1.html' %}
     <center><h2>Login Here</h2></center>
-    <form method="POST" action="/log">
+    <form method="POST" >
         <div class="form-row">
             <label for="id">&ensp;&ensp;&ensp;
                 &ensp;&ensp;ID:</label>
@@ -25,11 +25,49 @@
         </div>
         <br><br>
         <div class="form-row">
-            <input type="submit" value="login">
+            <input type="submit" value="login" id="submit">
         </div>
         <br>
-        <div id="noaccount" class="warning"><h6 class="red-text"><b>{{noaccount}}</b></h6></div>
+        <div class="warning"><h6 class="red-text" id="noaccount"></h6></div>
     </form>
     <center><h5>Don't have an account?<a href="{{url_for('signin')}}" id="signin">Sign up</a></h5></center>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript">
+    
+        $(document).ready(function() {
+            $('#submit').click(function(event) {
+              event.preventDefault();  // prevent default form submission behavior
+          
+              // get form data
+              var form_data = {
+                'id': $('#id').val(),
+                'password': $('#password').val()
+              }
+               
+              var jsonData = JSON.stringify(form_data);
+              // send ajax POST request to backend
+              $.ajax({
+                type: 'POST',
+                url: '{{ url_for("log") }}',
+                contentType: 'application/json',
+                data: jsonData,
+                success: function(response) {
+                    console.log(response);
+                
+                    if (response.redirect) {
+                        window.location.href = "{{ url_for('dashboard') }}";
+                    } else {
+                        $("#noaccount").text(response.noaccount);
+                    }
+                },
+                
+                error: function(response) {
+                  // handle error response from backend
+                  console.log(response);
+                }
+              });
+            });
+          });
+    </script>
 </body>
 </html>

@@ -9,6 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/allot.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
+    
 </head>
 <body>
     {% include 'nav2.html' %}
@@ -37,13 +38,51 @@
                     <td>
                         <div>
                             <label>Class:</label>
-                            <select id="class-dropdown-{{ i+1 }}" class="class-dropdown" required>
+                            <select id="class-dropdown-{{ i+1 }}" class="custom-select" required>
                                 <option value="">Select a class</option>
-                                <option value="S6 CSE A">S6 CSE A</option>
-                                <option value="S6 CSE B">S6 CSE B</option>
-                                <option value="S6 EEE ">S6 EEE</option>
-                                <option value="S6 EC ">S6 EC</option>
-                                <option value="S6 CE ">S6 CE</option>
+                                <option value="S1 CSE A">S1 CSE A</option>
+                                <option value="S1 CSE B">S1 CSE B</option>
+                                <option value="S1 EEE">S1 EEE</option>
+                                <option value="S1 EC">S1 EC</option>
+                                <option value="S1 CE">S1 CE</option>
+                                <option value="S2 CSE A"><b>S2 CSE A</b></option>
+                                <option value="S2 CSE B"><b>S2 CSE B</b></option>
+                                <option value="S2 EEE"><b>S2 EEE</b></option>
+                                <option value="S2 EC"><b>S2 EC</b></option>
+                                <option value="S2 CE"><b>S2 CE</b></option>
+                                <option value="S3 CSE A">S3 CSE A</option>
+                                <option value="S3 CSE B">S3 CSE B</option>
+                                <option value="S3 EEE">S3 EEE</option>
+                                <option value="S3 EC">S3 EC</option>
+                                <option value="S3 CE">S3 CE</option>
+                                
+                                <option value="S4 CSE A"><b>S4 CSE A</b></option>
+                                <option value="S4 CSE B"><b>S4 CSE B</b></option>
+                                <option value="S4 EEE"><b>S4 EEE</b></option>
+                                <option value="S4 EC"><b>S4 EC</b></option>
+                                <option value="S4 CE"><b>S4 CE</b></option>
+                                <option value="S5 CSE A">S5 CSE A</option>
+                                <option value="S5 CSE B">S5 CSE B</option>
+                                <option value="S5 EEE">S5 EEE</option>
+                                <option value="S5 EC">S5 EC</option>
+                                <option value="S5 CE">S5 CE</option>
+                                
+                                <option value="S6 CSE A"><b>S6 CSE A</b></option>
+                                <option value="S6 CSE B"><b>S6 CSE B</b></option>
+                                <option value="S6 EEE "><b>S6 EEE</b></option>
+                                <option value="S6 EC "><b>S6 EC</b></option>
+                                <option value="S6 CE "><b>S6 CE</b></option>
+                                <option value="S7 CSE A">S7 CSE A</option>
+                                <option value="S7 CSE B">S7 CSE B</option>
+                                <option value="S7 EEE">S7 EEE</option>
+                                <option value="S7 EC">S7 EC</option>
+                                <option value="S7 CE">S7 CE</option>
+                                
+                                <option value="S8 CSE A"><b>S8 CSE A</b></option>
+                                <option value="S8 CSE B"><b>S8 CSE B</b></option>
+                                <option value="S8 EEE"><b>S8 EEE</b></option>
+                                <option value="S8 EC"><b>S8 EC</b></option>
+                                <option value="S8 CE"><b>S8 CE</b></option>
                             </select>
                         </div>
                         <div>
@@ -63,10 +102,11 @@
     
     <br><br>
 
-    <center> <button type="submit" id="add-button">add</button></center>
+    <center> <button type="submit" id="add-button">Click Here to Allot</button></center>
 <p id="output"></p>
     <div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <script>
        
        
@@ -137,6 +177,8 @@
                 });
             });
         });
+       
+    
     </script>
 
 </body>

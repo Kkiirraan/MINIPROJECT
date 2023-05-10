@@ -13,15 +13,26 @@
         
        
         <tr>
-            <th>Total no. of allotted students</th>
+            <th>Date of exam</th>
+            <th>Time</th>
+            <th>number of alloted students</th>
             <th>Remaining</th>
         </tr>
+        {% for counts in count %}
         <tr>
-            <td>{{ count }}</td>
-           <td>{{remaining}}</td>
-            
+           
+            <td>{{ counts[0] }}</td>
+           <td>{{counts[1]}}
+            {{counts[2]}}</td>
+            <td>{{counts[3]}}</td>
+            {% if remaining - counts[3] == 0 %}
+            <td>Completely Allotted</td>
+               {% else %}
+            <td>{{remaining - counts[3]}}</td>
+           {% endif %}
+
         </tr>
-    
+    {% endfor %}
     </table>
 </div>
     <script>
