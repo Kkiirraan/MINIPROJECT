@@ -10,7 +10,7 @@ import time
 
 
 
-mydb=mysql.connector.connect(host="localhost",user="root",password="Kiranvijayan@2002",database="MINIPROJECT")
+mydb=mysql.connector.connect(host="localhost",user="root",password=" ",database=" ")
 mycursor=mydb.cursor()
 result=0
 
