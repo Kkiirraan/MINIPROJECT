@@ -13,21 +13,21 @@
     <center><h2>Login Here</h2></center>
     <form method="POST" >
         <div class="form-row">
-            <label for="id">&ensp;&ensp;&ensp;
-                &ensp;&ensp;ID:</label>
+            <label for="id">ID:</label>
             <input type="text" id="id" name="id" required>
+        
         </div>
-    
         <br>
-        <div class="form-row">
+      <div class="form-row">
             <label for="password">password:</label>
             <input type="password" id="password" name="password" required>
-        </div>
+      </div>
         <br><br>
         <div class="form-row">
             <input type="submit" value="login" id="submit">
-        </div>
+      
         <br>
+        </div>
         <div class="warning"><h6 class="red-text" id="noaccount"></h6></div>
     </form>
     <center><h5>Don't have an account?<a href="{{url_for('signin')}}" id="signin">Sign up</a></h5></center>

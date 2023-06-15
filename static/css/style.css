@@ -11,15 +11,14 @@ form {
 h1 {
     text-align: center;
 }
-h3 {
-    font-family: Arial, sans-serif;
-}
+
 .form-row {
     margin:auto;
     align-items: center;
     align-content: center;
     padding-top: 10px;
     position: relative;
+    
 }
 
 label {
@@ -77,8 +76,10 @@ input[type="text"] {
 body {
     align-items: center;
     font-family: Arial, sans-serif;
-   
-    background: linear-gradient(hsl(277, 100%, 56%), rgba(149, 36, 36, 0));
+    background-image: url('/static/yyyy\ \(1\).jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    
     opacity: 1;
     position: relative;
     top: 0px;
@@ -183,9 +184,7 @@ tr:hover {
     margin: 10px;
 }
 
-input:invalid {
-    border-color: red;
-}
+
 .w{
   color: red;
   font-size: 10px;

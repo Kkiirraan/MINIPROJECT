@@ -145,6 +145,11 @@
                     $("#incorrectdate").text(response.incorrectdate);
                     $("#doesnotmatch").text(response.doesnotmatch);
                     $("#incorrectid").text(response.incorrectid);
+                    if (response.redirect) {
+                      window.location.href = "{{ url_for('successlog') }}";
+                  } else {
+                      $("#noaccount").text(response.noaccount);
+                  }
                 },    
                 
                 error: function(response) {

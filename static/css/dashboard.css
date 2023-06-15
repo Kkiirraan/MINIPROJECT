@@ -1,3 +1,5 @@
 body{
-    background: linear-gradient(hsl(277, 100%, 56%), rgba(255, 255, 255, 0));
+    background-image: url('/static/yyyy\ \(1\).jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
 }

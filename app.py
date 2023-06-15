@@ -26,7 +26,11 @@ def home():
     
     return render_template('home.html',logged_in=False)
 
-
+@app.route('/successsignin',methods=['POST','GET'])
+def successlog():
+    
+    
+    return render_template('signupsucess.html')
 @app.route('/login',methods=['GET','POST'])
 def login():
     noaccount = session.pop('noaccount', '')
@@ -117,6 +121,8 @@ def signup():
                    mycursor.execute(sql,val)
                    mydb.commit()
                    
+                   response = {"redirect": True}
+                   return jsonify(response)
                    return render_template('signupsucess.html')
                  else:
                      response = {'accountalready': 'Account already exists'}
@@ -156,7 +162,7 @@ def log():
         if result:
              hashed_password = result[0].encode('utf-8')
              if bcrypt.checkpw(password, hashed_password):
-                  session['id'] = name
+                  session['id'] = name.capitalize()
                   print(session['id'])
                   
                   response = {"redirect": True}
