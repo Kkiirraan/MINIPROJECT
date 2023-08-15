@@ -1,73 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>login</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/login.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     {% include 'nav1.html' %}
-    <center><h2>Login Here</h2></center>
-    <form method="POST" >
-        <div class="form-row">
-            <label for="id">ID:</label>
-            <input type="text" id="id" name="id" required>
-        
-        </div>
-        <br>
+    <center><h2 id="login">Login Here</h2></center>
+    <form method="POST">
       <div class="form-row">
-            <label for="password">password:</label>
-            <input type="password" id="password" name="password" required>
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required />
       </div>
-        <br><br>
-        <div class="form-row">
-            <input type="submit" value="login" id="submit">
-      
-        <br>
-        </div>
-        <div class="warning"><h6 class="red-text" id="noaccount"></h6></div>
+      <br />
+      <div class="form-row">
+        <label for="password">password:</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+      <br /><br />
+      <div class="form-row">
+        <input type="submit" value="login" id="submit" />
+
+        <br />
+      </div>
+      <div class="warning"><h6 class="red-text" id="noaccount"></h6></div>
+      <center>
+        <h5>
+          Forgot your password?<a href="{{url_for('forgotpass')}}" id="signin"
+            >Reset</a
+          >
+        </h5>
+      </center>
     </form>
-    <center><h5>Don't have an account?<a href="{{url_for('signin')}}" id="signin">Sign up</a></h5></center>
+    <center>
+      <h5 id="signup">
+        Don't have an account?<a href="{{url_for('signin')}}" id="signin"
+          >Sign up</a
+        >
+      </h5>
+    </center>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script type="text/javascript">
-    
-        $(document).ready(function() {
-            $('#submit').click(function(event) {
-              event.preventDefault();  // prevent default form submission behavior
-          
-              // get form data
-              var form_data = {
-                'id': $('#id').val(),
-                'password': $('#password').val()
+      $(document).ready(function () {
+        $("#submit").click(function (event) {
+          event.preventDefault(); // prevent default form submission behavior
+
+          // get form data
+          var form_data = {
+            id: $("#id").val(),
+            password: $("#password").val(),
+          };
+
+          var jsonData = JSON.stringify(form_data);
+          // send ajax POST request to backend
+          $.ajax({
+            type: "POST",
+            url: '{{ url_for("log") }}',
+            contentType: "application/json",
+            data: jsonData,
+            success: function (response) {
+              console.log(response);
+
+              if (response.redirect) {
+                window.location.href = "{{ url_for('add') }}";
+              } else {
+                $("#noaccount").text(response.noaccount);
               }
-               
-              var jsonData = JSON.stringify(form_data);
-              // send ajax POST request to backend
-              $.ajax({
-                type: 'POST',
-                url: '{{ url_for("log") }}',
-                contentType: 'application/json',
-                data: jsonData,
-                success: function(response) {
-                    console.log(response);
-                
-                    if (response.redirect) {
-                        window.location.href = "{{ url_for('dashboard') }}";
-                    } else {
-                        $("#noaccount").text(response.noaccount);
-                    }
-                },
-                
-                error: function(response) {
-                  // handle error response from backend
-                  console.log(response);
-                }
-              });
-            });
+            },
+
+            error: function (response) {
+              // handle error response from backend
+              console.log(response);
+            },
           });
+        });
+      });
     </script>
-</body>
+  </body>
 </html>

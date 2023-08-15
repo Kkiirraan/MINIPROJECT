@@ -10,8 +10,10 @@
     <body>
          {% include 'nav1.html' %}
          <div class="formcenter">
-         <center><h3><B>CHECK YOUR SEAT HERE!</B></h3></center>
+         <center><h3 id="b"><B>CHECK YOUR SEAT HERE!</B></h3></center>
+
          <form method="POST" action="/check">
+
             <div class="form-row1">
                 
                 <label for="id">Register no:</label>
@@ -97,7 +99,7 @@
                     if(response.allot){
                         var table = '<table id="allotment-table"><tr><th>Date of exam</th><th>time of exam</th><th>register no.</th><th>name</th><th>room</th><th>seat no</th></tr>';
                             for (var i = 0; i < allot.length; i++) {
-                              table += '<tr><td>' + allot[i][0] + '</td><td>' + allot[i][1] + ' ' + allot[i][2] + '</td><td>' + allot[i][3] + '</td><td>' + allot[i][4] + '</td><td>' + allot[i][7] + ' ' + allot[i][8] + '</td><td>' + allot[i][5] + '</td></tr>';
+                              table += '<tr><td>' + allot[i][0] + '</td><td>' + allot[i][1] + ' ' + allot[i][2] + '</td><td>' + allot[i][3] + '</td><td>' + allot[i][4] + '</td><td>' + allot[i][7] + ' ' + allot[i][8] + '</td><td>' + allot[i][6] + '</td></tr>';
                             }
                             table += '</table>';
                             $('#allotment-table-container').html(table);

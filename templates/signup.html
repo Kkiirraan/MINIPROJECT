@@ -73,7 +73,7 @@
         <div id="incorrectid" class="warning"></div>
         <div>
             <center>
-                <input type="submit" value="sign up" id="submit">
+                <input type="submit" value="verify" id="submit">
             </center>
         </div>
     </form>
@@ -146,7 +146,7 @@
                     $("#doesnotmatch").text(response.doesnotmatch);
                     $("#incorrectid").text(response.incorrectid);
                     if (response.redirect) {
-                      window.location.href = "{{ url_for('successlog') }}";
+                      window.location.href = "{{ url_for('signupotp') }}";
                   } else {
                       $("#noaccount").text(response.noaccount);
                   }

@@ -7,10 +7,12 @@ import bcrypt
 import inspect
 import traceback
 import time
+from flask_mail import Mail,Message
+import random
 
 
 
-mydb=mysql.connector.connect(host="localhost",user="root",password=" ",database=" ")
+mydb=mysql.connector.connect(host="localhost",user="root",password="Kiranvijayan@2002",database="MINIPROJECT",auth_plugin="mysql_native_password")
 mycursor=mydb.cursor()
 result=0
 
@@ -20,6 +22,12 @@ app.secret_key = 'kiran'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['SESSION_REFRESH_EACH_REQUEST'] = True
 
+app.config['MAIL_SERVER']="smtp.gmail.com"
+app.config['MAIL_PORT']=587
+app.config['MAIL_USE_TLS']=True
+app.config['MAIL_USERNAME']="flask717@gmail.com"
+app.config['MAIL_PASSWORD']="mideleggibagbwcn"
+mail=Mail(app)
 
 @app.route('/')
 def home():
@@ -89,6 +97,17 @@ def signup():
         bgroup=data['bgroup']
         siblings=data['siblings']
         cinema=data['cinema']
+        session['name']=name
+        session['id']=id
+        session['dob']=dob
+        session['phone']=phone
+        session['email']=email
+        session['fcolor']=fcolor
+        session['bgroup']=bgroup
+        session['siblings']=siblings
+        session['cinema']=cinema
+        
+        
         if not name or not id or not dob or not phone or not fcolor or not bgroup or not siblings or not cinema or not email or not password or not confirm_password:
             return "not got the data"
         elif confirm_password != password:
@@ -114,20 +133,66 @@ def signup():
                  if result is None:
                    salts=bcrypt.gensalt()
                    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salts)
-                 
-                   sql='INSERT INTO signup_details (t_id,t_name,t_dob,phone,email,password,color,bgroup,siblings,cinema) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+                   session['hashed_password']=hashed_password
+                   """sql='INSERT INTO signup_details (t_id,t_name,t_dob,phone,email,password,color,bgroup,siblings,cinema) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
                    val=(id,name,dob,phone,email,hashed_password,fcolor,bgroup,siblings,cinema)
                  
                    mycursor.execute(sql,val)
-                   mydb.commit()
-                   
-                   response = {"redirect": True}
-                   return jsonify(response)
-                   return render_template('signupsucess.html')
+                   mydb.commit()"""
+                   otp_code=random.randint(1000,9999)
+                   session['otp_code']=otp_code
+                   try:
+                            mail.send_message(
+                                subject="OTP for your Flask app",
+                                sender="flask717@gmail.com",
+                                recipients=[email],
+                                body="Your OTP is: {otp}".format(otp=otp_code),
+                                )
+                            
+                            response = {"redirect": True}
+                            return jsonify(response)
+                            return render_template('signupsucess.html')
+                   except:
+                           response={'accountalready':'Network issue'}    
                  else:
                      response = {'accountalready': 'Account already exists'}
                      return jsonify(response)
-                     
+       
+@app.route('/signupotp',methods=['GET','POST'])
+def signupotp():
+        email=session.get('email')
+        return render_template('signupotp.html',email=email) 
+    
+@app.route('/verifysignupotp',methods=['GET','POST'])
+def verifysignupotp():
+        if request.method=='POST':
+            data = request.get_json()
+            otp=data['otp']
+            stored_otp=session.get('otp_code')
+            if otp==str(stored_otp):
+                name=session.get('name')
+                id=session.get('id')
+                dob=session.get('dob')
+                phone=session.get('phone')
+                email=session.get('email')
+                fcolor=session.get('fcolor')
+                bgroup=session.get('bgroup')
+                siblings=session.get('siblings')
+                hashed_password=session.get('hashed_password')
+                cinema=session.get('cinema')
+                sql='INSERT INTO signup_details (t_id,t_name,t_dob,phone,email,password,color,bgroup,siblings,cinema) values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)'
+                val=(id,name,dob,phone,email,hashed_password,fcolor,bgroup,siblings,cinema)
+                 
+                mycursor.execute(sql,val)
+                mydb.commit()
+           
+                response = {"redirect":True}
+                return jsonify(response)
+            else:
+                response={"incorrectotp":"WRONG  OTP"}
+                return jsonify(response)
+      
+    
           
 @app.route('/log',methods=['GET','POST'])
 def log():
@@ -173,8 +238,97 @@ def log():
              else:
                  response = {"noaccount": "INCORRECT PASSWORD"}
                  return jsonify(response)
+
+@app.route('/forgotpass',methods=['POST','GET'])
+def forgotpass():
+    return render_template('forgotpass.html')             
                  
+@app.route('/forgot',methods=['POST','GET'])
+def forgot():
+    if request.method=='POST':
+         data=request.get_json()
+         id=data['id']
+         session['id']=id
+         print(id)
+         try:
+              mycursor.execute('SELECT t_id FROM signup_details WHERE t_id=%s',(id,))
+              result=mycursor.fetchone()
+              mydb.commit()
+              if result is None or id != result[0]:
+                  
+                response = {"incorrectotp": "YOU DON'T HAVE AN ACCOUNT PLEASE SIGNUP FIRST"}
+                return jsonify(response)    
+              else:
+                  mycursor.execute('SELECT email FROM signup_details WHERE t_id=%s',(id,))
+                  email=mycursor.fetchone()
+                  mydb.commit()
+                  email=email[0]    
+                  session['email']=email
+                  otp_code=random.randint(1000,9999)
+                  session['otp_code']=otp_code
+                  
+                  mail.send_message(
+                                    subject="OTP for your Flask app",
+                                    sender="flask717@gmail.com",
+                                    recipients=[email],
+                                    body="Your OTP is: {otp}".format(otp=otp_code),
+                                )
+                  response = {"redirect": True}
+                  return jsonify(response)
+                          
+         except:
+             return "error" 
+          
+    return "Invalid request"        
               
+@app.route('/enterotp',methods=['POST','GET'])
+def enterotp():
+    if request.method=='POST':
+            data = request.get_json()
+            otp=data['otp']
+            email=session.get('email')
+            stored_otp=session.get('otp_code')
+            if otp==str(stored_otp):
+                response = {"redirect": True}
+                return jsonify(response)
+            else:
+                response={"incorrectotp":"WRONG  OTP"}
+                return jsonify(response)
+@app.route('/entermailotp',methods=['GET','POST'])
+def entermailotp():
+  email=session.get('email')  
+  return render_template('enterotp.html',email=email)    
+            
+@app.route('/resetpassword',methods=['POST','GET'])
+def resetpassword():
+    return render_template('resetpass.html')    
+
+
+@app.route('/newpassword',methods=['GET','POST'])
+def newpassword():
+     if request.method=='POST':
+         data=request.get_json()
+         password=data['password']
+         confirmpassword=data['confirmpassword']  
+         if password == confirmpassword:
+            email=session.get('email')
+            id=session.get('id')
+            salts=bcrypt.gensalt()
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), salts)
+            mycursor.execute('UPDATE signup_details SET password=%s WHERE t_id=%s',(hashed_password,id,))
+            email=mycursor.fetchone()
+            mydb.commit()
+            response={"redirect":True}
+            return jsonify(response)
+         else:
+             response={"noaccount":"Password does not match"}
+             return jsonify(response)
+         
+         
+@app.route('/resetsuccess',methods=['GET','POST'])
+def resetsuccess():
+    return render_template('resetsuccess.html')         
+                  
 @app.route('/logout', methods=['POST'])
 def logout():
     session.pop('id', None)
@@ -306,12 +460,13 @@ def add_data():
                   max_seat_no = max_seat_no+((int(to)-(int(fro)))+1)
             if max_seat_no>room[0][7]:
                 return f"Exeeds Capacity of the room you can allot upto {room[0][7]}"  
-            else:     
+            else:
+             max_seat_no=0
+                     
              for i in students:
                   clas = i['class']
                   to = i['to']
                   fro = i['from'] 
-                  
                   if clas and to and fro is not None:  
                      mycursor.execute("SELECT reg_no,name,roll_no,branch FROM student_details WHERE branch=%s AND roll_no BETWEEN %s AND %s;", (clas,fro, to))
                      st = mycursor.fetchall()
@@ -424,7 +579,7 @@ def viewalloteddetails(e_date, mer, dept, room_no):
             return render_template('allotedstddetails.html',logged_in=True,rooms=room,b=b,a=a)  
         else:
             room=""
-            return render_template('allotedstddetails.html',logged_in=True,nota="Havent alloted yet",rooms=room,b=b)
+            return render_template('allotedstddetails.html',logged_in=True,nota="SEAT IS NOT ALLOTED YET",rooms=room,b=b)
     else:    
         return redirect(url_for('login'))    
 
@@ -481,4 +636,4 @@ def count():
    
         
 if __name__=='__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=5100)

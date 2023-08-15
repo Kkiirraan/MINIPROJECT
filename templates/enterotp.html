@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
+</head>
+<body>
+    {% include 'nav1.html' %}
+    <center><h2>Verify Here</h2></center>
+    <form method="POST" >
+        <div class="form-row">
+            <label for="OTP">Enter Your OTP:</label>
+            <input type="text" id="OTP" name="OTP" required>
+        
+        </div>
+        
+        <br><br>
+        
+        <div class="form-row">
+            <input type="submit" value="verify" id="submit">
+           
+        <br>
+
+        </div>
+        <div class="warning"><h4 class="red-text" id="incorrectotp"></h4></div>
+        
+    </form>
+    <center><h4>An otp has been sent to <span style="color:#810b5e;">{{email}}</span></h4></center>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript">
+    
+        $(document).ready(function() {
+            $('#submit').click(function(event) {
+              event.preventDefault();  // prevent default form submission behavior
+          
+              // get form data
+              var form_data = {
+                'otp': $('#OTP').val(),
+                
+              }
+               
+              var jsonData = JSON.stringify(form_data);
+              // send ajax POST request to backend
+              $.ajax({
+                type: 'POST',
+                url: '{{ url_for("enterotp") }}',
+                contentType: 'application/json',
+                data: jsonData,
+                success: function(response) {
+                    console.log(response);
+                
+                    if (response.redirect) {
+                        window.location.href = "{{ url_for('resetpassword') }}";
+                    } else {
+                        $("#incorrectotp").text(response.incorrectotp);
+                    }
+                },
+                
+                error: function(response) {
+                  // handle error response from backend
+                  console.log(response);
+                }
+              });
+            });
+          });
+    </script>
+</body>
+</html>

@@ -1,197 +1,189 @@
 form {
-    max-width: 450px;
-    margin: auto;
-    padding: 50px;
-    border-bottom-color: #ffd012;
-    border-radius: 50px;
-    background-color: #ffffff;
-    position: relative;
+  max-width: 450px;
+  margin: auto;
+  padding: 50px;
+  border-bottom-color: #ffd012;
+  border-radius: 50px;
+  background-color: #ffffff;
+  position: relative;
+  top: 200px;
 }
-
+#b {
+  position: absolute;
+  transform: translate3d(740px, 120px, 0);
+  font-weight: 200px;
+}
+#bb {
+  top: 100px;
+}
 h1 {
-    text-align: center;
+  text-align: center;
 }
 
 .form-row {
-    margin:auto;
-    align-items: center;
-    align-content: center;
-    padding-top: 10px;
-    position: relative;
-    
+  margin: auto;
+  align-items: center;
+  align-content: center;
+  padding-top: 10px;
+  position: relative;
+  top: 200px;
 }
 
 label {
-    display: inline-block;
-    width: 150px;
-    font-weight: bold;
-    
+  display: inline-block;
+  width: 150px;
+  font-weight: bold;
 }
 
 input[type="text"] {
-    width: 250px;
-    padding: 13px;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
-    background-color: #00FFD1;
+  width: 250px;
+  padding: 13px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  background-color: #00ffd1;
 }
 .button {
-    align-items: center;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background: #002a3c;
-    color: white;
-    opacity: 1;
-    position: relative;
-    top: 60%;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 20px;
-    font-weight: 10px;
-  }
-  
+  align-items: center;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #002a3c;
+  color: white;
+  opacity: 1;
+  position: relative;
+  top: 60%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 20px;
+  font-weight: 10px;
+}
 
 .button:hover {
-    background-color: #810b5e;
-    color: rgb(255, 255, 255);
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-    
+  background-color: #810b5e;
+  color: rgb(255, 255, 255);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .error {
-    color: red;
-    font-size: 14px;
+  color: red;
+  font-size: 14px;
 }
 
 .success {
-    color: green;
-    font-size: 14px;
+  color: green;
+  font-size: 14px;
 }
 body {
-    align-items: center;
-    font-family: Arial, sans-serif;
-    background-image: url('/static/yyyy\ \(1\).jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    
-    opacity: 1;
-    position: relative;
-    top: 0px;
-    left: 0px;
-    
+  align-items: center;
+  font-family: Arial, sans-serif;
+  background-image: url("/static/yyyy\ \(1\).jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  opacity: 1;
+  position: relative;
+  top: 0px;
+  left: 0px;
 }
 
 h1 {
-    text-align: center;
+  text-align: center;
 }
 
 table {
-    
-    border-collapse: collapse;
-    margin-top: 20px;
-    
+  border-collapse: collapse;
+  margin-top: 20px;
 
-    background: rgba(153, 236, 253, 0.881);
-    opacity: 1;
-    position: relative;
-    top: 0px;
-    left: 0px;
-    overflow: hidden;
+  background: rgba(153, 236, 253, 0.881);
+  opacity: 1;
+  position: relative;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
 }
 
-th, td {
-    border: 1px solid #538ab8;
-    padding: 8px;
-    text-align: left;
+th,
+td {
+  border: 1px solid #538ab8;
+  padding: 8px;
+  text-align: left;
 }
 
 th {
-    background-color: #0783b8;
-    font-weight: bold;
+  background-color: #0783b8;
+  font-weight: bold;
 }
 
 tr:nth-child(even) {
-    background-color: #f9f9f9;
+  background-color: #f9f9f9;
 }
 
 tr:hover {
-    background-color: #e2e2e2;
+  background-color: #e2e2e2;
 }
-
 
 .btn:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
-.formcenter{
-    align-content: center;
-}
-
-.form-row2.form-row1
-{
-  
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
-    width: 50%;
-
+.formcenter {
+  align-content: center;
+  top: 100px;
 }
 
- 
-  .wrapper {
-    position:absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    position: relative;
-    min-height: 30%;
-    
-  
-  }
-  .container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #f2f2f2;
-    text-align: left;
-    padding-bottom: 0px;
-}
-  
- 
- 
-.bottombox{
-    width: 100%; 
-    height: 165px;
-    background-color: rgba(17.43, 255, 98.20, 0.23);
-
-}
-  
-
-  .warning {
-    color: red;
-    font-size: 16px;
-    margin-left: 10px;
-    align-items: center;
-    position: relative;
-    margin: 10px;
+.form-row2.form-row1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  width: 50%;
 }
 
+.wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: relative;
+  min-height: 30%;
+}
+.container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #f2f2f2;
+  text-align: left;
+  padding-bottom: 0px;
+}
 
-.w{
+.bottombox {
+  width: 100%;
+  height: 165px;
+  background-color: rgba(17.43, 255, 98.2, 0.23);
+}
+
+.warning {
+  color: red;
+  font-size: 16px;
+  margin-left: 10px;
+  align-items: center;
+  position: relative;
+  margin: 10px;
+}
+
+.w {
   color: red;
   font-size: 10px;
 }
 
 .group {
-  background-color: #11FF62;
+  background-color: #11ff62;
   opacity: 23%;
   color: rgb(0, 0, 0);
   border: 1px solid #ffffff;
@@ -206,13 +198,11 @@ tr:hover {
   display: flex;
   align-content: center;
   justify-content: space-between;
-  position: absolute;  
-   
-    right: 0;
-    text-align: left;
+  position: absolute;
+
+  right: 0;
+  text-align: left;
 }
-
-
 
 ul {
   list-style: none; /* remove bullets */
@@ -224,11 +214,11 @@ li {
   margin: 5px 0; /* add margin to list items */
 }
 
-.group .img2{
+.group .img2 {
   width: 100px;
 }
 
-.group .img3{
+.group .img3 {
   width: 30px;
   height: 30px;
 }
@@ -240,28 +230,26 @@ li {
   top: 20px;
   font-size: 14px;
 }
-.align-right .img333{
+.align-right .img333 {
   display: block;
   float: left;
   position: relative;
   left: 10px;
   top: 10px;
   margin-right: 1px;
-  
 }
 .align-right ul {
   padding-left: 20px;
   display: inline-block;
   position: relative;
   top: 10px;
-  
 }
-.align-right{
+.align-right {
   position: relative;
   left: 10px;
   top: 50px;
 }
-.align-center{
+.align-center {
   position: relative;
   left: 10px;
   top: 0px;
