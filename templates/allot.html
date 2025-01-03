@@ -166,8 +166,10 @@
                     },
                     success: function(response) {
                         console.log(response);
+                        if (response=="success"){
                         $('#add-button').text('Alloted');
                         $('#add-button').prop('disabled', true);
+                        }
                         $("#output").text(response);
                       },
                       

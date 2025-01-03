@@ -12,7 +12,7 @@ import random
 
 
 
-mydb=mysql.connector.connect(host="localhost",user="root",password="Kiranvijayan@2002",database="MINIPROJECT",auth_plugin="mysql_native_password")
+mydb=mysql.connector.connect(host="",user="",password="",database="",auth_plugin="")
 mycursor=mydb.cursor()
 result=0
 
@@ -373,12 +373,12 @@ def addroom():
                    try:
                       mycursor.execute(sql, val)
                       mydb.commit()
-                      response = {'roomadd': 'room added sucessfully'}
+                      response = {'roomadd': 'ROOM ADDED SUCCESSFULLY'}
                       return jsonify(response)
                    except Exception as e:
                       return "Error adding room: {}".format(str(e))
                  else:
-                     response = {'roomadd': 'room already'}
+                     response = {'roomadd': 'ROOM ALREADY EXISTS'}
                      return jsonify(response)
     else:
         return "Invalid request"
@@ -392,6 +392,11 @@ def list_rooms():
         rooms = mycursor.fetchall()
         
         mydb.commit()
+        for r in rooms:
+            print(r[8])
+            print(r[7])
+            
+            break
         return render_template('viewroom.html',logged_in=True,rooms=rooms)
         
     else:
@@ -534,8 +539,12 @@ def add_data():
                              mycursor.execute(delete_query, values)
                              mydb.commit() 
                              time.sleep(.00000000001)
+                             mycursor.execute("UPDATE room_details SET status= 0 WHERE e_date=%s AND mer=%s AND dept=%s AND room_no=%s;", (date,mer,dept,room_number,))
+                             result = mycursor.fetchone()
+                             time.sleep(.00000000001)
+                             mydb.commit()
                              return f"Aready alloted for {item[1]} of class {br}"  
-            return "success"             
+        return "success"             
       except JSONDecodeError as e:
         return "invalid method"
  else:   

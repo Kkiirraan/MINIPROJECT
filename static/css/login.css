@@ -16,7 +16,7 @@ form {
 #signup {
   top: 60px;
   position: absolute;
-  transform: translate3d(750px, 480px, 0);
+  transform: translate3d(660px, 500px, 0);
 }
 #login {
   top: 50px;

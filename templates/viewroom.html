@@ -1,51 +1,71 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>List of Rooms</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/viewroom.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap" rel="stylesheet">
-    
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/viewroom.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins&amp;display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     {% include 'nav2.html' %}
     <div class="formdiv">
-    <h1>LIST OF ROOMS</h1>
-    <table>
+      <h1>LIST OF ROOMS</h1>
+      <table>
         <tr>
-            <th>Date of exam</th>
-            <th>time of exam</th>
-            
-            <th>dept</th>
-            <th>room</th>
-            <th>Number of Students per Bench</th>
-            <th>Number of rows</th>
-            <th>Capacity of the room</th>
-            <th>Allot student</th>
-            <th>Delete room</th>
+          <th>Date of exam</th>
+          <th>time of exam</th>
+
+          <th>dept</th>
+          <th>room</th>
+          <th>Number of Students per Bench</th>
+          <th>Number of rows</th>
+          <th>Capacity of the room</th>
+          <th>Allot student</th>
+          <th>Delete room</th>
         </tr>
         {% for room in rooms %}
         <tr>
-            <td>{{ room[0] }}</td>
-            <td>{{ room[1] }}
-            {{ room[2] }}</td>
-            <td>{{ room[3] }}</td>
-            <td>{{ room[4]}}</td>
-            <td>{{ room[5]}}</td>
-            <td>{{ room[6]}}</td>
-            <td>{{ room[7]}}</td>
-            {% if room[8] == 1 %}
-            <td><a href="#" class="btn btn-success disabled" id="allotted-link">Allotted</a></td>
-            {% else %}
-            <td><a href="{{ url_for('allot', dept=room[3], e_date=room[0], mer=room[2], room_no=room[4])}}" class="btn btn-primary" id="allot-link">Allot</a></td>
-            {% endif %}
-        
-            <td><a href="{{ url_for('deleteroom', dept=room[3], e_date=room[0], mer=room[2], room_no=room[4]) }}" class="btn btn-primary">Delete</a></td>
+          <td>{{ room[0] }}</td>
+          <td>{{ room[1] }} {{ room[2] }}</td>
+          <td>{{ room[3] }}</td>
+          <td>{{ room[4]}}</td>
+          <td>{{ room[5]}}</td>
+          <td>{{ room[6]}}</td>
+          <td>{{ room[7]}}</td>
+          {% if room[8] == 1 %}
+          <td>
+            <a href="#" class="btn btn-success disabled" id="allotted-link"
+              >Allotted</a
+            >
+          </td>
+          {% else %}
+          <td>
+            <a
+              href="{{ url_for('allot', dept=room[3], e_date=room[0], mer=room[2], room_no=room[4])}}"
+              class="btn btn-primary"
+              id="allot-link"
+              >Allot</a
+            >
+          </td>
+          {% endif %}
+
+          <td>
+            <a
+              href="{{ url_for('deleteroom', dept=room[3], e_date=room[0], mer=room[2], room_no=room[4]) }}"
+              class="btn btn-primary"
+              >Delete</a
+            >
+          </td>
         </tr>
         {% endfor %}
-    </table>
-</div>
-    <script>
-        
-    </script>
-</body>
+      </table>
+    </div>
+    <script></script>
+  </body>
 </html>
