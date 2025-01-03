@@ -25,8 +25,8 @@ app.config['SESSION_REFRESH_EACH_REQUEST'] = True
 app.config['MAIL_SERVER']="smtp.gmail.com"
 app.config['MAIL_PORT']=587
 app.config['MAIL_USE_TLS']=True
-app.config['MAIL_USERNAME']="flask717@gmail.com"
-app.config['MAIL_PASSWORD']="mideleggibagbwcn"
+app.config['MAIL_USERNAME']=""
+app.config['MAIL_PASSWORD']=""
 mail=Mail(app)
 
 @app.route('/')
